@@ -1,0 +1,27 @@
+{
+  "name": "every1",
+  "description": "test for rando",
+  "main": "index.js",
+  "authors": [
+    "Nick <nicholas.brown2012@gmail.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/combjellly/every1",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "purescript-maybe": "^6.0.0",
+    "purescript-pseudo-random": "^0.2.2",
+    "purescript-random": "^6.0.0",
+    "purescript-globals": "^4.0.0"
+  },
+  "resolutions": {
+    "purescript-prelude": "^4.0.0",
+    "purescript-effect": "^2.0.0"
+  }
+}

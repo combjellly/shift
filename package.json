@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "esbuild": "0.14.54",
+    "esbuild-darwin-64": "^0.14.42",
+    "esbuild-wasm": "^0.14.42",
+    "spago": "^0.20.9"
+  }
+}
