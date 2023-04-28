@@ -196,7 +196,7 @@ getLoopTimes er wStart wEnd varMap seqMap (Loop n la)  =
   -- for each number , produce a tuple 
 
     let l = (Loop n la)
-        newN = resolveExpression n varMap seqMap-- converts loops expression to number 
+        newN = resolveExpression n varMcaap seqMap-- converts loops expression to number 
         safeN = limitLoopTime newN   
         xs = cycleIntervalList wStart wEnd safeN -- List Number
         in map (Tuple l) xs

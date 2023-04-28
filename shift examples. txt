@@ -1,0 +1,285 @@
+sv = 0
+p = 1 
+
+every 0.2
+	p=p+1
+	play.Lad_Clp[p*5,p]
+
+every 0.5
+	play.organ[50,7]
+	play.organ[50,3]
+	play.organ[50,12]
+
+every 0.25 
+	play.piano[75,24]
+
+
+every 1.5	
+	sv = 0
+	k = 100
+
+every 2 
+	sv = 100
+	p=1
+	k=0
+
+
+every 0.5
+	play.Isu_Snr[sv-20,(-5)]
+	play.Flt_K[k,p-10]
+
+-----
+
+sn=0
+
+every 1 
+	play.Acu_Snr[sn]
+	sn=0
+
+every 2
+	play.Bar_K
+	sn=50
+
+---
+
+y=0
+
+every 0.25
+	play.Bls_H1
+
+every 1
+	y=0
+	play.Do_Snr1[50,(8)]
+	
+every 0.25
+	play.Hvy_K[y,(-4)]
+	y=50
+
+every 2 
+	play.stick[50]
+
+---
+p = 9
+
+every 2
+	play.accordion[40, p+(-7)]
+	play.oboe[40, p +(-12)]
+
+every 0.5
+	play.organ[40,p+7]
+	play.organ[40,p+8]
+	play.organ[40,p+17]
+
+every 0.25 
+	play.piano[50,p+24]
+
+every 0.1 
+	play.string[40,p+48]
+
+----
+
+x = 10
+y = 20
+z = 100
+
+i = 1
+
+every (i/2)+0.05
+	play.Ac_H[60,i+24,x]
+
+every (i/2)+0.1
+	play.Ac_H[60,i+30,z] 	
+
+every 0.2
+	play.organ[50,i+0,x]
+	play.organ[50,i+7,y]
+	play.organ[50,i+12,z]
+
+every 0.1
+	play.piano[60,i+12,x]
+	play.piano[55,i+14,y]
+	play.piano[55,i+24,z]
+
+every 0.4
+	play.accordion[40,i+0,x]
+	play.accordion[40,i+(-7),y]
+	play.accordion[40,i+(-12),z]
+
+every 0.33
+	play.organ2[40,i+24,x]
+	play.organ2[50,i+16,y]
+	play.organ2[40,i+30,z]
+
+every 0.2
+	x = x + 1
+	y = y + 1
+	z = z - 1
+every 10
+	x = 10
+	y = 20
+	z = 100
+---
+
+i = 1
+
+every i+i+3
+	play.piano[50,0]
+
+every i+i+i+3
+	play.piano[50,2]
+
+every i+i+i+i+3
+	play.piano[50,4]
+
+every i+i+i+i+i+3
+	play.piano[50,6]
+
+every i+i+i+i+i+i+3
+	play.piano[50,8]
+
+every i+i+i+i+i+i+i+3
+	play.piano[50,10]
+
+every i+i+i+i+i+i+i+i+3
+	play.piano[50,12]
+
+every i+i+i+i+i+i+i+i+i+3
+	play.piano[50,14]
+
+every i+i+i+i+i+i+i+i+i+i+3
+	play.piano[50,16]
+
+---
+
+i=3
+every 1/3
+	x = random. 1 3
+	y = x / 3
+	
+	play.hi[80,x]
+
+every 0.1
+	play.k1:x-1[20,x*(-5),p]
+
+every 0.2 
+	p = random. 0 100
+	o = random. 0 100
+	d = random. 0 100
+
+every 0.05
+	play.Organ1[50,0+i,p]
+	play.Organ1[50,7+i,o]
+	play.Organ2[50,12+i,d]
+
+every 16
+	i= x
+
+--- fun beat
+i=40
+
+every 0.5
+	play.pingu:o/10[p-30,x*(-5),d]
+
+every 4
+	play.pingu:3[80,1]
+
+every 0.2 
+	p = random. 0 100
+	o = random. 0 100
+	d = random. 0 100
+
+every 0.5
+	play.Organ1[50,0+i,p]
+	play.Organ1[50,7+i,o]
+	play.Organ2[50,12+i,d]
+
+every 1
+	b = 0
+	play.claps:1[70]
+	play.perc:1[70,0]
+
+
+every 0.5
+	play.k2:2[b]
+
+	b = 70
+
+r = 0
+p=0
+every 0.5
+	play.Organ1[50,7]
+	play.Organ1[50,28,r]
+	play.Organ1[40,(-7)]
+	r = random.0 100
+
+every 0.3
+	play.Piano[70,i*7,w]
+	w = random.0 100
+	i = random.1 4
+
+every 3
+	play.Vibraphone[100,n*7,p]
+	p=p+10
+
+every 24
+	p=0
+
+every  1
+	i = i + 100
+
+every 16
+	play.Organ1[80,bassriff,r]
+	bassriff = (-1)
+
+every 32
+	bassriff = 0
+
+	y = 0
+
+
+----- SEQUENCER
+d = 0
+
+every 1
+	d = 0
+
+every 0.25
+	seq = [0 2 4 7 9]
+	i = seq:d
+	play.Piano[50,i*4]
+	d = d + 1 
+
+----
+
+y=0
+shift = 0
+time = 1
+
+every time/4
+	play.Piano[70,note+7, pan]
+	pan = random. 0 100
+
+every 3
+	time = random. 1 10
+
+every 0.5
+	note = random. [0 2 4 7 9 12 48 (-10)]
+
+every 0.5
+	play.Organ1[50, note+12+24, pan]
+	time = random. 1 4
+
+every 0.125
+	play.hi:time*2[60,note,pan]
+
+every 1
+	play.k2[70,(-4)]
+	sVol = 0
+	
+every 0.5
+	play.snare:time[sVol]
+	sVol = 60
+
+
+
+
