@@ -1,8 +1,8 @@
 @import url(//fonts.googleapis.com/css?family=Open+Sans);
-
+@import url("//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css");
 
 body {
-  --background-color: #E9E0A0;
+  background-color: #E9E0A0;
   background-color: black;
 
   font-family: 'Open Sans', sans-serif;
@@ -29,11 +29,32 @@ textarea:focus {
 
 }
 
+side {
+  display:block;
+  margin-left: 5%;  
+  margin-right: 5%;
+  margin-top: 15%;
+  font-family: 'Helvetica';
+  color: #490707;
+  font-size: 1.5em;
+}
+
+a {
+  display:block;
+  margin-left: 5%;  
+  margin-right: 5%;
+  margin-top: 15%;
+  font-family: 'Helvetica';
+  color: #490707;
+  font-size: 1.5em;
+
+}
+
 #codeBlock{
     position: absolute;
     top: 0%;
     left: 0%;
-      width: 100%;
+    width: 100%;
     height:  100%;
 }
 
@@ -47,19 +68,13 @@ h2{
 #buttonPlace{
 	    position: absolute;
 	     top: 2%;
-	     right: 2%;
+	     right: 2%;;
 }
 
-button {
-	background: linear-gradient(90deg, rgba(152,215,21,1) 0%, rgba(241,209,79,1) 16%, rgba(121,101,9,1) 35%, rgba(140,255,182,1) 59%, rgba(240,92,92,1) 73%, rgba(0,212,255,1) 100%);
-    background-repeat: no-repeat;
-    border: 1 px dotted;
-  	font-size: 25px;
-  	font-family: 'Open Sans', sans-serif;
-    cursor: pointer;
-    overflow: hidden;
-    outline: none;
+.btn-lg{
+  font-size: 3em;
 }
+
 
 canvas {
        position:absolute;
@@ -69,3 +84,56 @@ canvas {
        height:100%;
        z-index:-1;
     }
+
+.sidebar {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    background-color: gray;
+    overflow-x: hidden;
+    padding-top: 60px;
+    transition: 0.5s;
+}
+
+.sidebar a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 1.4rem;
+    color: #fff;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidebar a:hover {
+    color: #f1f1f1;
+}
+
+.sidebar .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+.openbtn:hover {
+    background-color: #2b9348;
+}
+
+#main {
+    transition: margin-left 0.5s;
+    padding: 20px;
+}
+
+@media screen and (max-height: 450px) {
+    .sidebar {
+        padding-top: 15px;
+    }
+
+    .sidebar a {
+        font-size: 18px;
+    }
+}
