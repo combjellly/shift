@@ -31,19 +31,18 @@ textarea:focus {
 
 side {
   display:block;
-  margin-left: 5%;  
+  margin-left: 3%;  
   margin-right: 5%;
   margin-top: 15%;
   font-family: 'Helvetica';
-  color: #490707;
-  font-size: 1.5em;
+  color: white;
+  font-size: 1.1em;
 }
 
+
+
 a {
-  display:block;
-  margin-left: 5%;  
-  margin-right: 5%;
-  margin-top: 15%;
+
   font-family: 'Helvetica';
   color: #490707;
   font-size: 1.5em;
@@ -99,16 +98,16 @@ canvas {
 }
 
 .sidebar a {
-    padding: 8px 8px 8px 32px;
-    text-decoration: none;
-    font-size: 1.4rem;
+    margin-left: 5%;  
+    margin-right: 5%;
+    text-decoration: underline;
+    font-size: 1.2rem;
     color: #fff;
-    display: block;
     transition: 0.3s;
 }
 
 .sidebar a:hover {
-    color: #f1f1f1;
+    color: red;
 }
 
 .sidebar .closebtn {

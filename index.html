@@ -228,55 +228,62 @@ const closeSidebar = () => {
 
 <div id="mySidebar" class="sidebar">
     <a href="javascript:void(0)" class="closebtn" onclick="closeSidebar()">&times;</a>
-<side>
-	   <img src="static/img/logo.png" width="30%" height=auto>
-	   <br></br>
-Shift is a live coding language designed to help students and tech-newcomers alike to learn the basics of computer programming through music. Research and process documentation can be found in the accompanying thesis, published in 2022:
-
-   <br></br>
-
-<a href="http://hdl.handle.net/11375/28305 "> Thesis </a>
-<a href="https://shift.nickhernandez.ca/docs/intro "> About </a>
-<a href="https://shift.nickhernandez.ca/docs/category/tutorial---basics"> Tutorials </a>
+	  <side>
 
 
 
+	   	<img style="display: block; margin:auto;" src="static/img/logo.png" width="30%" height=auto>
 
-</side>
+	<br></br>
+		<span style="display: block; text-align: center; ">
+
+			<a href="https://shift.nickhernandez.ca/docs/intro "> About</a>
+			<a href="https://shift.nickhernandez.ca/docs/category/tutorial---basics"> Tutorials</a>
+			<a href="http://hdl.handle.net/11375/28305 "> Thesis</a> 
+
+	<br></br>
+	<br></br>
 
 
+		</span>
+		<span style="display: block; text-align: center;">
+		Shift is a live coding language designed to help students and tech-newcomers alike to learn the basics of computer programming through music. Research and process documentation can be found in the accompanying thesis, published in 2022. For more information on how to use Shift, please click to the About link above.
+		</span>
+
+	</side>
 </div>
 
 
 <div id=buttonPlace>
 
 
-<p>
-	<button type="button" onclick="openSidebar()" class="btn btn-default btn-lg" style="color: white">
-  		<span  id="info"  class="glyphicon glyphicon-info-sign" >  </span> 
-	</button>
-</p>
+	<p>
+		<button type="button" onclick="openSidebar()" class="btn btn-default btn-lg" style="color: white">
+	  		<span  id="info"  class="glyphicon glyphicon-info-sign" >  </span> 
+		</button>
+	</p>
 
 
 
-<p>
-	<button type="button" onclick="toggleButton()" class="btn btn-default btn-lg" style="color: white">
-  		<span id="button_toggle"  class="glyphicon glyphicon-play" > </span> 
-	</button>
-</p>
+	<p>
+		<button type="button" onclick="toggleButton()" class="btn btn-default btn-lg" style="color: white">
+	  		<span id="button_toggle"  class="glyphicon glyphicon-play" > </span> 
+		</button>
+	</p>
 
-<p>
-	<button type="button" onclick="doEvaluate()" class="btn btn-default btn-lg" style="color: white">
-  		<span id="button_toggle"  class="glyphicon glyphicon-refresh" > </span> 
-	</button>
-</p>
+	<p>
+		<button type="button" onclick="doEvaluate()" class="btn btn-default btn-lg" style="color: white">
+	  		<span id="button_toggle"  class="glyphicon glyphicon-refresh" > </span> 
+		</button>
+	</p>
 
-<p>
-	<button type="button" onclick="advanceMessage()" class="btn btn-default btn-lg" style="color: white">
-  		<span  id="advance_text"  class="glyphicon glyphicon-step-forward" > </span> 
-	</button>
-</p>
-<div id="status"> </div>
+	<p>
+		<button type="button" onclick="advanceMessage()" class="btn btn-default btn-lg" style="color: white">
+	  		<span  id="advance_text"  class="glyphicon glyphicon-step-forward" > </span> 
+		</button>
+	</p>
+
+	<div id="status"> </div>
 
 
 </div>
