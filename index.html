@@ -79,14 +79,14 @@ every 1.5
 
 
 every 0.5
-	play.Piano:i:y[70,0,0]
+	play.piano:i:y[70,0,0]
 	y = y +1
 
 every 3 
 	i = [0 5 7]
 
 every 0.75
-	play.Piano:(i:y)-1[70,0,100]
+	play.piano:(i:y)-1[70,0,100]
 
 </textarea>
 
@@ -133,8 +133,8 @@ every 1.5 / time
 	i = [0 5 7]
 	
 every 0.75/ time
-	play.HARDBASS:(o*change)-1 [70,0,40]	
-	play.HARDBASS:(o*change)-2 [70,0,70]
+	play.hardbass:(o*change)-1 [70,0,40]	
+	play.hardbass:(o*change)-2 [70,0,70]
 
 every 3/ time
 	y = 0
@@ -173,9 +173,9 @@ every 0.2
 	d = random. 0 100
 
 every 0.05
-	play.Organ1[50,0+i,p]
-	play.Organ1[50,7+i,o]
-	play.Organ2[50,12+i,d]
+	play.organ[50,0+i,p]
+	play.organ[50,7+i,o]
+	play.organ1[50,12+i,d]
 
 every 16
 	i= x
