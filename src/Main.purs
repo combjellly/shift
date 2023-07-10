@@ -196,7 +196,7 @@ getLoopTimes er wStart wEnd varMap seqMap (Loop n la)  =
   -- for each number , produce a tuple 
 
     let l = (Loop n la)
-        newN = resolveExpression n varMcaap seqMap-- converts loops expression to number 
+        newN = resolveExpression n varMap seqMap-- converts loops expression to number 
         safeN = limitLoopTime newN   
         xs = cycleIntervalList wStart wEnd safeN -- List Number
         in map (Tuple l) xs
@@ -270,6 +270,17 @@ performAction er nowCycles (Sequence v xs) = do
   write newmap er.sequences
   pure Nil
 
+performAction er nowCycles (Conditional v xs ca) = do 
+  varMap <- liftEffect $ read $ er.variables
+  seqMap <- liftEffect $ read $ er.sequences  
+  let rV =  resolveExpression v varMap seqMap
+  let rXS = resolveExpression xs varMap seqMap
+
+  if rV == rXS then do
+    performListAction er ca nowCycles
+    -- condition funcitons would go here. prolly case of..... < > == != <= >= ....
+  else do 
+    pure Nil
 
 
 -- update these variables at specific times

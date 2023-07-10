@@ -1604,6 +1604,22 @@ var Sequence = /* @__PURE__ */ function() {
   };
   return Sequence2;
 }();
+var Conditional = /* @__PURE__ */ function() {
+  function Conditional2(value0, value1, value2) {
+    this.value0 = value0;
+    this.value1 = value1;
+    this.value2 = value2;
+  }
+  ;
+  Conditional2.create = function(value0) {
+    return function(value1) {
+      return function(value2) {
+        return new Conditional2(value0, value1, value2);
+      };
+    };
+  };
+  return Conditional2;
+}();
 var Loop = /* @__PURE__ */ function() {
   function Loop3(value0, value1) {
     this.value0 = value0;
@@ -27557,7 +27573,7 @@ var naturalOrFloatToNumber = function(v) {
     return v.value0;
   }
   ;
-  throw new Error("Failed pattern match at Parser (line 284, column 1 - line 284, column 54): " + [v.constructor.name]);
+  throw new Error("Failed pattern match at Parser (line 313, column 1 - line 313, column 54): " + [v.constructor.name]);
 };
 var identifier = /* @__PURE__ */ function() {
   return tokenParser.identifier;
@@ -27577,7 +27593,7 @@ var additionSubtraction = /* @__PURE__ */ function() {
 var $lazy_sequenceRead = /* @__PURE__ */ $runtime_lazy7("sequenceRead", "Parser", function() {
   return bind6(identifier)(function(xs) {
     return discard2(reservedOp(":"))(function() {
-      return bind6($lazy_variableTask(240))(function(i) {
+      return bind6($lazy_variableTask(271))(function(i) {
         return pure4(new SequenceRead(xs, i));
       });
     });
@@ -27585,25 +27601,25 @@ var $lazy_sequenceRead = /* @__PURE__ */ $runtime_lazy7("sequenceRead", "Parser"
 });
 var $lazy_variableTask = /* @__PURE__ */ $runtime_lazy7("variableTask", "Parser", function() {
   return bind6(pure4(unit))(function() {
-    return choice3([$$try($lazy_sequenceRead(232)), $$try($lazy_variableTaskArithmetic(233))]);
+    return choice3([$$try($lazy_sequenceRead(263)), $$try($lazy_variableTaskArithmetic(264))]);
   });
 });
 var $lazy_variableTask$prime = /* @__PURE__ */ $runtime_lazy7("variableTask'", "Parser", function() {
   return bind6(pure4(unit))(function() {
-    return chainl1($lazy_variableTask$prime$prime(260))(divisionMultiplication);
+    return chainl1($lazy_variableTask$prime$prime(289))(divisionMultiplication);
   });
 });
 var $lazy_variableTask$prime$prime = /* @__PURE__ */ $runtime_lazy7("variableTask''", "Parser", function() {
   return bind6(pure4(unit))(function() {
-    return choice3([parens($lazy_variableTask(273)), $$try(map11(Constant.create)(negativeFloat)), $$try(map11(Constant.create)(detNum)), $$try(map11(VariableRead.create)(identifier))]);
+    return choice3([parens($lazy_variableTask(302)), $$try(map11(Constant.create)(negativeFloat)), $$try(map11(Constant.create)(detNum)), $$try(map11(VariableRead.create)(identifier))]);
   });
 });
 var $lazy_variableTaskArithmetic = /* @__PURE__ */ $runtime_lazy7("variableTaskArithmetic", "Parser", function() {
   return bind6(pure4(unit))(function() {
-    return chainl1($lazy_variableTask$prime(246))(additionSubtraction);
+    return chainl1($lazy_variableTask$prime(277))(additionSubtraction);
   });
 });
-var variableTask = /* @__PURE__ */ $lazy_variableTask(228);
+var variableTask = /* @__PURE__ */ $lazy_variableTask(259);
 var genRandNum = /* @__PURE__ */ bind6(identifier)(function(v) {
   return discard2(reservedOp("="))(function() {
     return discard2(reserved("random"))(function() {
@@ -27796,7 +27812,24 @@ var playActionPan = /* @__PURE__ */ discard2(/* @__PURE__ */ reserved("play"))(f
     });
   });
 });
-var action = /* @__PURE__ */ choice3([/* @__PURE__ */ $$try(sequence2), /* @__PURE__ */ $$try(randomList), /* @__PURE__ */ $$try(genRandNum), /* @__PURE__ */ $$try(variableAction), /* @__PURE__ */ $$try(playActionCut), /* @__PURE__ */ $$try(playActionPan), /* @__PURE__ */ $$try(playActionNote), /* @__PURE__ */ $$try(playActionGain), /* @__PURE__ */ $$try(playAction)]);
+var conditionalAction = /* @__PURE__ */ choice3([/* @__PURE__ */ $$try(sequence2), /* @__PURE__ */ $$try(randomList), /* @__PURE__ */ $$try(genRandNum), /* @__PURE__ */ $$try(variableAction), /* @__PURE__ */ $$try(playActionCut), /* @__PURE__ */ $$try(playActionPan), /* @__PURE__ */ $$try(playActionNote), /* @__PURE__ */ $$try(playActionGain), /* @__PURE__ */ $$try(playAction)]);
+var listOfConditionalActions = /* @__PURE__ */ sepBy(conditionalAction)(whiteSpace);
+var cond = /* @__PURE__ */ discard2(/* @__PURE__ */ reserved("if"))(function() {
+  return bind6(variableTask)(function(v) {
+    return discard2(reservedOp("="))(function() {
+      return bind6(variableTask)(function(xs) {
+        return discard2(reservedOp("["))(function() {
+          return bind6(listOfConditionalActions)(function(ca) {
+            return discard2(reservedOp("]"))(function() {
+              return pure4(new Conditional(v, xs, ca));
+            });
+          });
+        });
+      });
+    });
+  });
+});
+var action = /* @__PURE__ */ choice3([/* @__PURE__ */ $$try(cond), /* @__PURE__ */ $$try(sequence2), /* @__PURE__ */ $$try(randomList), /* @__PURE__ */ $$try(genRandNum), /* @__PURE__ */ $$try(variableAction), /* @__PURE__ */ $$try(playActionCut), /* @__PURE__ */ $$try(playActionPan), /* @__PURE__ */ $$try(playActionNote), /* @__PURE__ */ $$try(playActionGain), /* @__PURE__ */ $$try(playAction)]);
 var listOfActions = /* @__PURE__ */ sepBy(action)(whiteSpace);
 var loop = /* @__PURE__ */ discard2(/* @__PURE__ */ reserved("every"))(function() {
   return bind6(variableTask)(function(n) {
@@ -27927,7 +27960,7 @@ var varRead = function(x) {
         return 0;
       }
       ;
-      throw new Error("Failed pattern match at Main (line 332, column 16 - line 334, column 32): " + [v.constructor.name]);
+      throw new Error("Failed pattern match at Main (line 343, column 16 - line 345, column 32): " + [v.constructor.name]);
     }();
     return varOut;
   };
@@ -27948,7 +27981,7 @@ var readSequenceNumber = function(i) {
               return i;
             }
             ;
-            throw new Error("Failed pattern match at Main (line 318, column 36 - line 322, column 47): " + [v1.constructor.name]);
+            throw new Error("Failed pattern match at Main (line 329, column 36 - line 333, column 47): " + [v1.constructor.name]);
           }();
           return number;
         }
@@ -27957,7 +27990,7 @@ var readSequenceNumber = function(i) {
           return i;
         }
         ;
-        throw new Error("Failed pattern match at Main (line 315, column 15 - line 325, column 30): " + [v.constructor.name]);
+        throw new Error("Failed pattern match at Main (line 326, column 15 - line 336, column 30): " + [v.constructor.name]);
       }();
       return list;
     };
@@ -27994,7 +28027,7 @@ var resolveExpression = function(v) {
         return v.value0;
       }
       ;
-      throw new Error("Failed pattern match at Main (line 303, column 1 - line 303, column 102): " + [v.constructor.name, v1.constructor.name, v2.constructor.name]);
+      throw new Error("Failed pattern match at Main (line 314, column 1 - line 314, column 102): " + [v.constructor.name, v1.constructor.name, v2.constructor.name]);
     };
   };
 };
@@ -28239,6 +28272,16 @@ var performVariableA = function(er) {
     };
   };
 };
+var performListAction = function(er) {
+  return function(la) {
+    return function(nowCycles) {
+      return function __do3() {
+        var xs = traverse2(performAction(er)(nowCycles))(la)();
+        return concat(xs);
+      };
+    };
+  };
+};
 var performAction = function(v) {
   return function(v1) {
     return function(v2) {
@@ -28309,17 +28352,22 @@ var performAction = function(v) {
         };
       }
       ;
+      if (v2 instanceof Conditional) {
+        return function __do3() {
+          var varMap = liftEffect2(read(v.variables))();
+          var seqMap = liftEffect2(read(v.sequences))();
+          var rV = resolveExpression(v2.value0)(varMap)(seqMap);
+          var rXS = resolveExpression(v2.value1)(varMap)(seqMap);
+          var $157 = rV === rXS;
+          if ($157) {
+            return performListAction(v)(v2.value2)(v1)();
+          }
+          ;
+          return Nil.value;
+        };
+      }
+      ;
       throw new Error("Failed pattern match at Main (line 227, column 1 - line 227, column 79): " + [v.constructor.name, v1.constructor.name, v2.constructor.name]);
-    };
-  };
-};
-var performListAction = function(er) {
-  return function(la) {
-    return function(nowCycles) {
-      return function __do3() {
-        var xs = traverse2(performAction(er)(nowCycles))(la)();
-        return concat(xs);
-      };
     };
   };
 };
@@ -28346,8 +28394,8 @@ var compareOriginalVariable = function(er) {
           ;
           throw new Error("Failed pattern match at Main (line 150, column 25 - line 152, column 44): " + [v.constructor.name]);
         }();
-        var $165 = n === originalValue;
-        if ($165) {
+        var $169 = n === originalValue;
+        if ($169) {
           return write(varMap)(er.variables)();
         }
         ;
@@ -28449,8 +28497,8 @@ var renderStandalone = function(er) {
       var t = nowDateTime();
       var prevW = read(er.wEnd)();
       var futureTime = fromMaybe(t)(adjust3(400)(t));
-      var $175 = lessThanOrEq1(prevW)(futureTime);
-      if ($175) {
+      var $179 = lessThanOrEq1(prevW)(futureTime);
+      if ($179) {
         var wE = fromMaybe(t)(adjust3(500)(prevW));
         write(prevW)(er.wStart)();
         write(wE)(er.wEnd)();

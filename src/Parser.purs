@@ -38,7 +38,6 @@ elementChoice = choice [
       try $ loopElement,
       try $ globalSequence,
       try $ variableGlobal
-
       ]
 
 loopElement :: P Element
@@ -83,6 +82,7 @@ listOfActions = sepBy action (whiteSpace)
 -- maybe implement try here. 
 action :: P Action
 action = choice [
+    try $ cond,
     try $ sequence,
     try $ randomList,
     try $ genRandNum,
@@ -92,8 +92,25 @@ action = choice [
     try $ playActionNote, 
     try $ playActionGain,
     try $ playAction
-
 ]
+
+listOfConditionalActions :: P (List Action)
+listOfConditionalActions = sepBy conditionalAction (whiteSpace) 
+
+conditionalAction :: P Action
+conditionalAction = choice [
+    try $ sequence,
+    try $ randomList,
+    try $ genRandNum,
+    try $ variableAction,
+    try $ playActionCut, 
+    try $ playActionPan, 
+    try $ playActionNote, 
+    try $ playActionGain,
+    try $ playAction
+]
+
+
 
 playAction :: P Action
 playAction = do
@@ -209,6 +226,7 @@ genRandNum = do
   xs <- variableTask
   pure $ RandomN v x xs
 
+
 sequence :: P Action
 sequence = do
   v <- identifier
@@ -217,6 +235,19 @@ sequence = do
   xs <- listOfNum
   reservedOp "]"
   pure $ Sequence v xs 
+
+
+cond :: P Action
+cond = do
+  reserved "if"
+  v <- variableTask 
+  reservedOp "=" 
+  xs <- variableTask
+  reservedOp "[" 
+  ca <- listOfConditionalActions
+  reservedOp "]" 
+  pure $ Conditional v xs ca
+
 
 variableA :: P VariableA
 variableA = do
@@ -244,8 +275,6 @@ variableTaskArithmetic :: P NumExpression
 variableTaskArithmetic = do
   _ <- pure unit
   chainl1 variableTask' additionSubtraction
-
-
 
 additionSubtraction :: P (NumExpression -> NumExpression -> NumExpression)
 additionSubtraction = choice [

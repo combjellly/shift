@@ -24,6 +24,7 @@ data Action = Play String NumExpression PlayParams
               | RandomN String NumExpression NumExpression 
               | RandomList String (List NumExpression)
               | Sequence String (List NumExpression)
+              | Conditional NumExpression NumExpression (List Action)
 
 type PlayParams = {gain :: NumExpression, note :: NumExpression, pan :: NumExpression, cut :: NumExpression}
 
@@ -54,6 +55,8 @@ instance showAction :: Show Action where
     show (RandomN v x xs) = "rand." <> show x <> "," <> show xs 
     show (RandomList v xs) = "rand.[" <> show xs <> "]"
     show (Sequence v xs) = show v <> "[ " <> show xs <> "]"
+    show (Conditional v xs ca) = "if" <> show v <> "= " <> show xs <> "do " <> show ca
+
 
 instance showVariableA :: Show VariableA where
     show (VariableA x xs) = show x <> "=" <> show xs
