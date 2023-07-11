@@ -181,14 +181,15 @@ every 16
 	i= x
 `
 
-var script4 =`i=3
-every 1
-	if i > 5 [play.piano[70,p]]
-	if i < 5 [play.guitar[70,p]]
+var script4 =`i=0
+notes = [0 3 5 7 9 12 15 19]
+
+every 0.5
+	if i > 5 [play.piano[70, notes:p, p*15]]
+	if i < 5 [play.guitar[70, notes:p, p*15]]
 	if i != 10 [i = i+1]
-	if i = 10 [ i = 0]
-	p = random 0 20
-	
+	if i == 10 [ i = 0]
+	p = random. 0 7
 `
 
 var textarea = document.getElementById("code");
