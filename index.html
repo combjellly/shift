@@ -180,8 +180,19 @@ every 0.05
 every 16
 	i= x
 `
+
+var script4 =`i=3
+every 1
+	if i > 5 [play.piano[70,p]]
+	if i < 5 [play.guitar[70,p]]
+	if i != 10 [i = i+1]
+	if i = 10 [ i = 0]
+	p = random 0 20
+	
+`
+
 var textarea = document.getElementById("code");
-var messages = [ script1, script2, script3 ];
+var messages = [ script4, script1, script2, script3 ];
 var currMesg = 0;
 
 function advanceMessage() {
