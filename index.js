@@ -1605,16 +1605,19 @@ var Sequence = /* @__PURE__ */ function() {
   return Sequence2;
 }();
 var Conditional = /* @__PURE__ */ function() {
-  function Conditional2(value0, value1, value2) {
+  function Conditional2(value0, value1, value2, value3) {
     this.value0 = value0;
     this.value1 = value1;
     this.value2 = value2;
+    this.value3 = value3;
   }
   ;
   Conditional2.create = function(value0) {
     return function(value1) {
       return function(value2) {
-        return new Conditional2(value0, value1, value2);
+        return function(value3) {
+          return new Conditional2(value0, value1, value2, value3);
+        };
       };
     };
   };
@@ -27548,7 +27551,7 @@ var tokenParser = /* @__PURE__ */ makeTokenParser(/* @__PURE__ */ function() {
     opStart: v.opStart,
     opLetter: v.opLetter,
     reservedNames: ["every", "play", "if", "elif", "else", "random"],
-    reservedOpNames: [",", "=", "+", "-", "*", "/", "[", "]", ":"],
+    reservedOpNames: [",", "=", "+", "-", "*", "/", "[", "]", ":", "==", "!=", ">", "<", ">=", "<="],
     caseSensitive: v.caseSensitive
   };
 }());
@@ -27573,7 +27576,7 @@ var naturalOrFloatToNumber = function(v) {
     return v.value0;
   }
   ;
-  throw new Error("Failed pattern match at Parser (line 313, column 1 - line 313, column 54): " + [v.constructor.name]);
+  throw new Error("Failed pattern match at Parser (line 375, column 1 - line 375, column 54): " + [v.constructor.name]);
 };
 var identifier = /* @__PURE__ */ function() {
   return tokenParser.identifier;
@@ -27593,7 +27596,7 @@ var additionSubtraction = /* @__PURE__ */ function() {
 var $lazy_sequenceRead = /* @__PURE__ */ $runtime_lazy7("sequenceRead", "Parser", function() {
   return bind6(identifier)(function(xs) {
     return discard2(reservedOp(":"))(function() {
-      return bind6($lazy_variableTask(271))(function(i) {
+      return bind6($lazy_variableTask(333))(function(i) {
         return pure4(new SequenceRead(xs, i));
       });
     });
@@ -27601,25 +27604,25 @@ var $lazy_sequenceRead = /* @__PURE__ */ $runtime_lazy7("sequenceRead", "Parser"
 });
 var $lazy_variableTask = /* @__PURE__ */ $runtime_lazy7("variableTask", "Parser", function() {
   return bind6(pure4(unit))(function() {
-    return choice3([$$try($lazy_sequenceRead(263)), $$try($lazy_variableTaskArithmetic(264))]);
+    return choice3([$$try($lazy_sequenceRead(325)), $$try($lazy_variableTaskArithmetic(326))]);
   });
 });
 var $lazy_variableTask$prime = /* @__PURE__ */ $runtime_lazy7("variableTask'", "Parser", function() {
   return bind6(pure4(unit))(function() {
-    return chainl1($lazy_variableTask$prime$prime(289))(divisionMultiplication);
+    return chainl1($lazy_variableTask$prime$prime(351))(divisionMultiplication);
   });
 });
 var $lazy_variableTask$prime$prime = /* @__PURE__ */ $runtime_lazy7("variableTask''", "Parser", function() {
   return bind6(pure4(unit))(function() {
-    return choice3([parens($lazy_variableTask(302)), $$try(map11(Constant.create)(negativeFloat)), $$try(map11(Constant.create)(detNum)), $$try(map11(VariableRead.create)(identifier))]);
+    return choice3([parens($lazy_variableTask(364)), $$try(map11(Constant.create)(negativeFloat)), $$try(map11(Constant.create)(detNum)), $$try(map11(VariableRead.create)(identifier))]);
   });
 });
 var $lazy_variableTaskArithmetic = /* @__PURE__ */ $runtime_lazy7("variableTaskArithmetic", "Parser", function() {
   return bind6(pure4(unit))(function() {
-    return chainl1($lazy_variableTask$prime(277))(additionSubtraction);
+    return chainl1($lazy_variableTask$prime(339))(additionSubtraction);
   });
 });
-var variableTask = /* @__PURE__ */ $lazy_variableTask(259);
+var variableTask = /* @__PURE__ */ $lazy_variableTask(321);
 var genRandNum = /* @__PURE__ */ bind6(identifier)(function(v) {
   return discard2(reservedOp("="))(function() {
     return discard2(reserved("random"))(function() {
@@ -27814,22 +27817,88 @@ var playActionPan = /* @__PURE__ */ discard2(/* @__PURE__ */ reserved("play"))(f
 });
 var conditionalAction = /* @__PURE__ */ choice3([/* @__PURE__ */ $$try(sequence2), /* @__PURE__ */ $$try(randomList), /* @__PURE__ */ $$try(genRandNum), /* @__PURE__ */ $$try(variableAction), /* @__PURE__ */ $$try(playActionCut), /* @__PURE__ */ $$try(playActionPan), /* @__PURE__ */ $$try(playActionNote), /* @__PURE__ */ $$try(playActionGain), /* @__PURE__ */ $$try(playAction)]);
 var listOfConditionalActions = /* @__PURE__ */ sepBy(conditionalAction)(whiteSpace);
-var cond = /* @__PURE__ */ discard2(/* @__PURE__ */ reserved("if"))(function() {
-  return bind6(variableTask)(function(v) {
-    return discard2(reservedOp("="))(function() {
-      return bind6(variableTask)(function(xs) {
-        return discard2(reservedOp("["))(function() {
-          return bind6(listOfConditionalActions)(function(ca) {
-            return discard2(reservedOp("]"))(function() {
-              return pure4(new Conditional(v, xs, ca));
-            });
+var equalTo = /* @__PURE__ */ bind6(variableTask)(function(v) {
+  return discard2(reservedOp("=="))(function() {
+    return bind6(variableTask)(function(xs) {
+      return discard2(reservedOp("["))(function() {
+        return bind6(listOfConditionalActions)(function(ca) {
+          return discard2(reservedOp("]"))(function() {
+            return pure4(new Conditional(v, "==", xs, ca));
           });
         });
       });
     });
   });
 });
-var action = /* @__PURE__ */ choice3([/* @__PURE__ */ $$try(cond), /* @__PURE__ */ $$try(sequence2), /* @__PURE__ */ $$try(randomList), /* @__PURE__ */ $$try(genRandNum), /* @__PURE__ */ $$try(variableAction), /* @__PURE__ */ $$try(playActionCut), /* @__PURE__ */ $$try(playActionPan), /* @__PURE__ */ $$try(playActionNote), /* @__PURE__ */ $$try(playActionGain), /* @__PURE__ */ $$try(playAction)]);
+var greaterThan2 = /* @__PURE__ */ bind6(variableTask)(function(v) {
+  return discard2(reservedOp(">"))(function() {
+    return bind6(variableTask)(function(xs) {
+      return discard2(reservedOp("["))(function() {
+        return bind6(listOfConditionalActions)(function(ca) {
+          return discard2(reservedOp("]"))(function() {
+            return pure4(new Conditional(v, ">", xs, ca));
+          });
+        });
+      });
+    });
+  });
+});
+var greaterThanOrEqualTo = /* @__PURE__ */ bind6(variableTask)(function(v) {
+  return discard2(reservedOp(">="))(function() {
+    return bind6(variableTask)(function(xs) {
+      return discard2(reservedOp("["))(function() {
+        return bind6(listOfConditionalActions)(function(ca) {
+          return discard2(reservedOp("]"))(function() {
+            return pure4(new Conditional(v, ">=", xs, ca));
+          });
+        });
+      });
+    });
+  });
+});
+var lessThan2 = /* @__PURE__ */ bind6(variableTask)(function(v) {
+  return discard2(reservedOp("<"))(function() {
+    return bind6(variableTask)(function(xs) {
+      return discard2(reservedOp("["))(function() {
+        return bind6(listOfConditionalActions)(function(ca) {
+          return discard2(reservedOp("]"))(function() {
+            return pure4(new Conditional(v, "<", xs, ca));
+          });
+        });
+      });
+    });
+  });
+});
+var lesserThanOrEqualTo = /* @__PURE__ */ bind6(variableTask)(function(v) {
+  return discard2(reservedOp("<="))(function() {
+    return bind6(variableTask)(function(xs) {
+      return discard2(reservedOp("["))(function() {
+        return bind6(listOfConditionalActions)(function(ca) {
+          return discard2(reservedOp("]"))(function() {
+            return pure4(new Conditional(v, "<=", xs, ca));
+          });
+        });
+      });
+    });
+  });
+});
+var notEqualTo = /* @__PURE__ */ bind6(variableTask)(function(v) {
+  return discard2(reservedOp("!="))(function() {
+    return bind6(variableTask)(function(xs) {
+      return discard2(reservedOp("["))(function() {
+        return bind6(listOfConditionalActions)(function(ca) {
+          return discard2(reservedOp("]"))(function() {
+            return pure4(new Conditional(v, "!=", xs, ca));
+          });
+        });
+      });
+    });
+  });
+});
+var conditional = /* @__PURE__ */ discard2(/* @__PURE__ */ reserved("if"))(function() {
+  return choice3([$$try(equalTo), $$try(notEqualTo), $$try(greaterThan2), $$try(lessThan2), $$try(greaterThanOrEqualTo), $$try(lesserThanOrEqualTo)]);
+});
+var action = /* @__PURE__ */ choice3([/* @__PURE__ */ $$try(conditional), /* @__PURE__ */ $$try(sequence2), /* @__PURE__ */ $$try(randomList), /* @__PURE__ */ $$try(genRandNum), /* @__PURE__ */ $$try(variableAction), /* @__PURE__ */ $$try(playActionCut), /* @__PURE__ */ $$try(playActionPan), /* @__PURE__ */ $$try(playActionNote), /* @__PURE__ */ $$try(playActionGain), /* @__PURE__ */ $$try(playAction)]);
 var listOfActions = /* @__PURE__ */ sepBy(action)(whiteSpace);
 var loop = /* @__PURE__ */ discard2(/* @__PURE__ */ reserved("every"))(function() {
   return bind6(variableTask)(function(n) {
@@ -27960,7 +28029,7 @@ var varRead = function(x) {
         return 0;
       }
       ;
-      throw new Error("Failed pattern match at Main (line 343, column 16 - line 345, column 32): " + [v.constructor.name]);
+      throw new Error("Failed pattern match at Main (line 359, column 16 - line 361, column 32): " + [v.constructor.name]);
     }();
     return varOut;
   };
@@ -27981,7 +28050,7 @@ var readSequenceNumber = function(i) {
               return i;
             }
             ;
-            throw new Error("Failed pattern match at Main (line 329, column 36 - line 333, column 47): " + [v1.constructor.name]);
+            throw new Error("Failed pattern match at Main (line 345, column 36 - line 349, column 47): " + [v1.constructor.name]);
           }();
           return number;
         }
@@ -27990,7 +28059,7 @@ var readSequenceNumber = function(i) {
           return i;
         }
         ;
-        throw new Error("Failed pattern match at Main (line 326, column 15 - line 336, column 30): " + [v.constructor.name]);
+        throw new Error("Failed pattern match at Main (line 342, column 15 - line 352, column 30): " + [v.constructor.name]);
       }();
       return list;
     };
@@ -28027,7 +28096,7 @@ var resolveExpression = function(v) {
         return v.value0;
       }
       ;
-      throw new Error("Failed pattern match at Main (line 314, column 1 - line 314, column 102): " + [v.constructor.name, v1.constructor.name, v2.constructor.name]);
+      throw new Error("Failed pattern match at Main (line 330, column 1 - line 330, column 102): " + [v.constructor.name, v1.constructor.name, v2.constructor.name]);
     };
   };
 };
@@ -28075,13 +28144,13 @@ var parse = function(er) {
   };
 };
 var panFix = function(p) {
-  var $110 = p >= 1;
-  if ($110) {
+  var $113 = p >= 1;
+  if ($113) {
     return 1;
   }
   ;
-  var $111 = p <= 0;
-  if ($111) {
+  var $114 = p <= 0;
+  if ($114) {
     return 0;
   }
   ;
@@ -28104,8 +28173,8 @@ var loopList = function(v) {
   throw new Error("Failed pattern match at Main (line 187, column 1 - line 187, column 33): " + [v.constructor.name]);
 };
 var limitLoopTime = function(n) {
-  var $118 = n <= 1e-3;
-  if ($118) {
+  var $121 = n <= 1e-3;
+  if ($121) {
     return 1e-3;
   }
   ;
@@ -28145,13 +28214,13 @@ var launch = function __do2() {
   return er;
 };
 var gainFix = function(g) {
-  var $119 = g >= 1;
-  if ($119) {
+  var $122 = g >= 1;
+  if ($122) {
     return 1;
   }
   ;
-  var $120 = g <= 0;
-  if ($120) {
+  var $123 = g <= 0;
+  if ($123) {
     return 0;
   }
   ;
@@ -28162,8 +28231,8 @@ var play = function(wd) {
     return for_2(es)(function(i) {
       var gainFixed = gainFix(i.gain / 100);
       var panFixed = panFix(i.pan / 100);
-      var $121 = i.note >= 50;
-      if ($121) {
+      var $124 = i.note >= 50;
+      if ($124) {
         return function __do3() {
           playSample(wd)({
             s: i.s,
@@ -28178,8 +28247,8 @@ var play = function(wd) {
         };
       }
       ;
-      var $122 = i.note <= -50;
-      if ($122) {
+      var $125 = i.note <= -50;
+      if ($125) {
         var rNote = -50;
         return function __do3() {
           playSample(wd)({
@@ -28228,8 +28297,8 @@ var cycleIntervalList = function(wStart) {
   return function(wEnd) {
     return function(n) {
       var pFirst = toNumber(ceil2(wStart / n)) * n;
-      var $123 = pFirst < wEnd;
-      if ($123) {
+      var $126 = pFirst < wEnd;
+      if ($126) {
         return new Cons(pFirst, cycleIntervalList(pFirst + n)(wEnd)(n));
       }
       ;
@@ -28357,10 +28426,37 @@ var performAction = function(v) {
           var varMap = liftEffect2(read(v.variables))();
           var seqMap = liftEffect2(read(v.sequences))();
           var rV = resolveExpression(v2.value0)(varMap)(seqMap);
-          var rXS = resolveExpression(v2.value1)(varMap)(seqMap);
-          var $157 = rV === rXS;
-          if ($157) {
-            return performListAction(v)(v2.value2)(v1)();
+          var rXS = resolveExpression(v2.value2)(varMap)(seqMap);
+          var condBool = function() {
+            if (v2.value1 === "==") {
+              return rV === rXS;
+            }
+            ;
+            if (v2.value1 === "!=") {
+              return rV !== rXS;
+            }
+            ;
+            if (v2.value1 === ">") {
+              return rV > rXS;
+            }
+            ;
+            if (v2.value1 === "<") {
+              return rV < rXS;
+            }
+            ;
+            if (v2.value1 === ">=") {
+              return rV >= rXS;
+            }
+            ;
+            if (v2.value1 === "<=") {
+              return rV <= rXS;
+            }
+            ;
+            return false;
+          }();
+          var $161 = condBool === true;
+          if ($161) {
+            return performListAction(v)(v2.value3)(v1)();
           }
           ;
           return Nil.value;
@@ -28394,8 +28490,8 @@ var compareOriginalVariable = function(er) {
           ;
           throw new Error("Failed pattern match at Main (line 150, column 25 - line 152, column 44): " + [v.constructor.name]);
         }();
-        var $169 = n === originalValue;
-        if ($169) {
+        var $174 = n === originalValue;
+        if ($174) {
           return write(varMap)(er.variables)();
         }
         ;
@@ -28497,8 +28593,8 @@ var renderStandalone = function(er) {
       var t = nowDateTime();
       var prevW = read(er.wEnd)();
       var futureTime = fromMaybe(t)(adjust3(400)(t));
-      var $179 = lessThanOrEq1(prevW)(futureTime);
-      if ($179) {
+      var $184 = lessThanOrEq1(prevW)(futureTime);
+      if ($184) {
         var wE = fromMaybe(t)(adjust3(500)(prevW));
         write(prevW)(er.wStart)();
         write(wE)(er.wEnd)();

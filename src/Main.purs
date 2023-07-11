@@ -270,17 +270,33 @@ performAction er nowCycles (Sequence v xs) = do
   write newmap er.sequences
   pure Nil
 
-performAction er nowCycles (Conditional v xs ca) = do 
+performAction er nowCycles (Conditional v comp xs ca) = do 
   varMap <- liftEffect $ read $ er.variables
   seqMap <- liftEffect $ read $ er.sequences  
-  let rV =  resolveExpression v varMap seqMap
-  let rXS = resolveExpression xs varMap seqMap
+  let rV =  resolveExpression v varMap seqMap -- first variable
+  let rXS = resolveExpression xs varMap seqMap -- variable being compared to 
 
-  if rV == rXS then do
+  let condBool = case comp of
+
+                    "==" -> rV == rXS 
+                    "!=" -> rV /= rXS 
+                    ">" ->  rV >  rXS 
+                    "<" ->  rV <  rXS 
+                    ">=" -> rV >= rXS 
+                    "<=" -> rV <= rXS 
+                    _ -> false
+
+
+
+  if condBool == true then do
     performListAction er ca nowCycles
     -- condition funcitons would go here. prolly case of..... < > == != <= >= ....
   else do 
     pure Nil
+
+
+
+
 
 
 -- update these variables at specific times

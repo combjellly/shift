@@ -23,7 +23,7 @@ type P a = ParserT String Identity a
 tokenParser :: GenTokenParser String Identity
 tokenParser = makeTokenParser $ LanguageDef (unGenLanguageDef emptyDef) {
   reservedNames = ["every","play","if","elif","else","random"],
-  reservedOpNames = [",","=","+","-","*","/","[","]",":"]
+  reservedOpNames = [",","=","+","-","*","/","[","]",":","==","!=",">","<",">=","<="]
   }
 
 parsetest :: String -> Either ParseError (List Element)
@@ -71,8 +71,6 @@ variableGlobal = do
   xs <- variableTask -- detNum -- converting int to Number. perhaps variable task. Make it String Numexpression
   pure $ VariableGlobal x xs
 
-
-
 -----------------------------
 
 listOfActions :: P (List Action)
@@ -82,7 +80,7 @@ listOfActions = sepBy action (whiteSpace)
 -- maybe implement try here. 
 action :: P Action
 action = choice [
-    try $ cond,
+    try $ conditional,
     try $ sequence,
     try $ randomList,
     try $ genRandNum,
@@ -237,17 +235,79 @@ sequence = do
   pure $ Sequence v xs 
 
 
-cond :: P Action
-cond = do
-  reserved "if"
+-- Comparison // Conditionals
+
+conditional :: P Action
+conditional = do
+  reserved "if"  
+  choice [
+    try $ equalTo, -- ==
+    try $ notEqualTo, -- !=
+    try $ greaterThan, -- >
+    try $ lessThan, -- <
+    try $ greaterThanOrEqualTo, -- >=
+    try $ lesserThanOrEqualTo -- <= 
+    ]
+
+equalTo :: P Action
+equalTo = do
   v <- variableTask 
-  reservedOp "=" 
+  reservedOp "==" 
   xs <- variableTask
   reservedOp "[" 
   ca <- listOfConditionalActions
   reservedOp "]" 
-  pure $ Conditional v xs ca
+  pure $ Conditional v "==" xs ca
 
+notEqualTo :: P Action
+notEqualTo = do
+  v <- variableTask 
+  reservedOp "!=" 
+  xs <- variableTask
+  reservedOp "[" 
+  ca <- listOfConditionalActions
+  reservedOp "]" 
+  pure $ Conditional v "!=" xs ca
+
+greaterThan :: P Action
+greaterThan = do
+  v <- variableTask 
+  reservedOp ">" 
+  xs <- variableTask
+  reservedOp "[" 
+  ca <- listOfConditionalActions
+  reservedOp "]" 
+  pure $ Conditional v ">" xs ca
+
+lessThan :: P Action
+lessThan = do
+  v <- variableTask 
+  reservedOp "<" 
+  xs <- variableTask
+  reservedOp "[" 
+  ca <- listOfConditionalActions
+  reservedOp "]" 
+  pure $ Conditional v "<" xs ca
+
+greaterThanOrEqualTo :: P Action
+greaterThanOrEqualTo = do
+  v <- variableTask 
+  reservedOp ">=" 
+  xs <- variableTask
+  reservedOp "[" 
+  ca <- listOfConditionalActions
+  reservedOp "]" 
+  pure $ Conditional v ">=" xs ca
+
+lesserThanOrEqualTo :: P Action
+lesserThanOrEqualTo = do
+  v <- variableTask 
+  reservedOp "<=" 
+  xs <- variableTask
+  reservedOp "[" 
+  ca <- listOfConditionalActions
+  reservedOp "]" 
+  pure $ Conditional v "<=" xs ca
 
 variableA :: P VariableA
 variableA = do
@@ -255,6 +315,8 @@ variableA = do
   reservedOp "="
   task <- variableTask
   pure $ VariableA v task
+
+---- variable task
 
 variableTask :: P NumExpression
 variableTask = do 
