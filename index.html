@@ -21,9 +21,19 @@
 <script type="module">
 import {launch, launchDirt , main, printToConsole, renderStandalone, parse } from './index.js'
 
+function unlockAudioContext(audioCtx) {
+  if (audioCtx.state !== 'suspended') return;
+  const b = document.body;
+  const events = ['touchstart','touchend', 'mousedown','keydown'];
+  events.forEach(e => b.addEventListener(e, unlock, false));
+  function unlock() { audioCtx.resume().then(clean); }
+  function clean() { events.forEach(e => b.removeEventListener(e, unlock)); }
+}
+
 function launchNow(){
 	window._engineRecord = launch();
 	window._webDirt = launchDirt();
+	unlockAudioContext(_webDirt)
 	render();
 }
 
@@ -49,21 +59,7 @@ window.render = render;
 window.stop = stop;
 
 	
-// event to start audio on ios
-window.addEventListener('touchstart', function() {
 
-	// create empty buffer
-	var buffer = myContext.createBuffer(1, 1, 22050);
-	var source = myContext.createBufferSource();
-	source.buffer = buffer;
-
-	// connect to output (your speakers)
-	source.connect(myContext.destination);
-
-	// play the file
-	source.noteOn(0);
-
-}, false);
 </script>
 
 
