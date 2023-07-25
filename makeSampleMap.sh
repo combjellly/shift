@@ -13,9 +13,9 @@ find $1 -mindepth 1 -maxdepth 1 -iname "*" | sort | while read d; do
     (( dircount++ ))
     dirname=`basename $d`
     printf "\"%s\": [" "$dirname"
-    search2=$searchRoot/$dirname/*.WAV
+    search2=$searchRoot/$dirname/*.mp3
     filecount=0
-    find "$d" -iname "*.wav" | sort | while read f; do
+    find "$d" -iname "*.mp3" | sort | while read f; do
     # for f in $search2; do
       filename=$(printf %q "$f")
       basename=${f##*/}
