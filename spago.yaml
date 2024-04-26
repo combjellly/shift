@@ -1,0 +1,41 @@
+package:
+  name: shift
+  dependencies:
+    - aff
+    - arrays
+    - console
+    - control
+    - datetime
+    - effect
+    - either
+    - enums
+    - foldable-traversable
+    - identity
+    - integers
+    - lcg
+    - lists
+    - maybe
+    - newtype
+    - now
+    - ordered-collections
+    - parsing
+    - prelude
+    - webdirt
+    - random
+    - refs
+    - tuples
+    - unlift
+  test:
+    main: Test.Main
+    dependencies: []
+workspace:
+  package_set:
+    registry: 50.3.2
+  extra_packages: 
+    webdirt:
+      dependencies:
+        - effect
+        - prelude
+      repo: https://github.com/dktr0/WebDirt.git
+      version: 6fc66e5f1b60a49c2326a1bcd79756bd68115e2a
+

@@ -17,19 +17,20 @@ data Element = LoopElement Loop
 
 data Loop = Loop NumExpression (List Action)
 
--- data Condition = Condition Boolean (List Action) 
-
 data Action = Play String NumExpression PlayParams 
+              | MidiPlay NumExpression MidiParams
               | VariableAction VariableA 
               | RandomN String NumExpression NumExpression 
               | RandomList String (List NumExpression)
               | Sequence String (List NumExpression)
               | Conditional  NumExpression String NumExpression (List Action)
 
+-- Should Gain come before Note in parse? What may the priority be)
 type PlayParams = {gain :: NumExpression, note :: NumExpression, pan :: NumExpression, cut :: NumExpression}
+type MidiParams = {note :: NumExpression, velocity :: NumExpression, duration :: NumExpression}
+
 
 data VariableA = VariableA String NumExpression
-
 
 data NumExpression =  
         Addition NumExpression NumExpression |
@@ -52,6 +53,7 @@ instance showLoop :: Show Loop where
 
 instance showAction :: Show Action where
     show (Play x n i) = "play.(" <> show x <> ") :"<> show n <> "[" <> show i <> "]"
+    show (MidiPlay x i) = "midi:"<> show x <> "[" <> show i <> "]"
     show (VariableAction x) = "(" <>show x<> ")"
     show (RandomN v x xs) = "rand." <> show x <> "," <> show xs 
     show (RandomList v xs) = "rand.[" <> show xs <> "]"

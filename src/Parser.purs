@@ -89,7 +89,9 @@ action = choice [
     try $ playActionPan, 
     try $ playActionNote, 
     try $ playActionGain,
-    try $ playAction
+    try $ playAction,
+    try $ midiPlayAction
+
 ]
 
 listOfConditionalActions :: P (List Action)
@@ -105,8 +107,23 @@ conditionalAction = choice [
     try $ playActionPan, 
     try $ playActionNote, 
     try $ playActionGain,
-    try $ playAction
+    try $ playAction,
+    try $ midiPlayAction
+
 ]
+
+midiPlayAction :: P Action
+midiPlayAction = do
+  reserved"midi"
+  i <- sampleNumber
+  reservedOp "["
+  n <- variableTask
+  reservedOp ","
+  v <- variableTask
+  reservedOp ","
+  d <- variableTask
+  reservedOp "]"
+  pure $ MidiPlay i {note : n, velocity : v, duration:d}
 
 
 

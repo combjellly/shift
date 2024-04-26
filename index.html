@@ -6,7 +6,7 @@
 
 
 <link rel="stylesheet" href="style.css">
-
+<script src="./midi/midi.js"></script>
 <script src="./WebDirt/WebDirt-packed.js"></script> <!-- import WebDirt JS library -->
 <!--
 
@@ -34,6 +34,7 @@ function launchNow(){
 	window._engineRecord = launch();
 	window._webDirt = launchDirt();
 	unlockAudioContext(_webDirt)
+	populateMidiOutputDropdown();
 	render();
 }
 
@@ -49,8 +50,11 @@ function stop() {
 }
 
 function render(){
-	renderStandalone(_engineRecord)(_webDirt)();
-	setTimeout(render,200);
+	var disp = renderStandalone(_engineRecord)(_webDirt)();
+	//document.getElementById('dog').textContent = disp;
+	playMidiEvents(disp);
+	console.log(disp)
+	setTimeout(render,300);
 }
 
 window.launchNow = launchNow;
@@ -63,30 +67,46 @@ window.stop = stop;
 </script>
 
 
+
+
 <div> <canvas ><script src="static/js/newdollzjs.js"> </script>  </canvas></div>
 <div id=codeBlock>
 
 
-<textarea id="code" rows="4" cols="50" onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;} " >y=0
+<textarea id="code" rows="4" cols="50" onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;} " >notes = [1 6 10 13 18]
+note = 3
+pCounter = 0 
+pnote = 0
 
-every 1.5
-	y = 0
-	i = [0 4 8]
 
 
 every 0.5
-	play.piano:i:y[70,0,0]
-	y = y +1
-
-every 3 
-	i = [0 5 7]
-
-every 0.75
-	play.piano:(i:y)-1[70,0,100]
+	pnote = notes:pCounter
+	midi[pnote+ 50,60]
+	pCounter = pCounter + 1
+	if pCounter == 5 [ pCounter = 0]
+	
 
 </textarea>
 
 <script>
+
+    document.addEventListener('keydown', function(event) {
+        // Check if the Shift key is held down and the Enter key is pressed
+        if (event.shiftKey && event.key === ' ') {
+            // Call your JavaScript function here
+            event.preventDefault();
+
+	   		doEvaluate();
+        }
+    });
+
+    function yourFunction() {
+        // Your function logic goes here
+        console.log("Shift + Enter pressed!");
+        // Add your code to be executed when Shift + Enter is pressed
+    }
+
 
 var script1 = `y=0
 every 1.5
@@ -178,14 +198,19 @@ every 16
 `
 
 var script4 =`i=0
-notes = [0 3 5 7 9 12 15 19]
+notes = [1 6 10 13 18]
+note = 3
+pCounter = 0 
+pnote = 0
+
+
 
 every 0.5
-	if i > 5 [play.piano[70, notes:p, p*15]]
-	if i < 5 [play.guitar[70, notes:p, p*15]]
-	if i != 10 [i = i+1]
-	if i == 10 [ i = 0]
-	p = random. 0 7
+	pnote = notes:pCounter
+	midi[pnote+ 50,60]
+	pCounter = pCounter + 1
+	if pCounter == 5 [ pCounter = 0]
+	
 `
 
 var textarea = document.getElementById("code");
@@ -249,6 +274,11 @@ const closeSidebar = () => {
 			<a href="https://shift.nickhernandez.ca/docs/category/tutorial---basics"> Tutorials</a>
 			<a href="http://hdl.handle.net/11375/28305 "> Thesis</a> 
 
+    <label for="midiOutputDropdown">Select MIDI Output:</label>
+    <select id="midiOutputDropdown"></select>
+    <button onclick="populateMidiOutputDropdown();">Populate MIDI Output</button>
+	<button onclick="playMidiEvents()">Test MIDI Output</button>
+
 	<br></br>
 	<br></br>
 
@@ -292,6 +322,7 @@ const closeSidebar = () => {
 	</p>
 
 	<div id="status"> </div>
+
 
 
 </div>
