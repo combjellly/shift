@@ -82,7 +82,7 @@ pnote = 0
 
 every 0.5
 	pnote = notes:pCounter
-	midi[pnote+ 50,60]
+	midi[pnote+ 50,60,300]
 	pCounter = pCounter + 1
 	if pCounter == 5 [ pCounter = 0]
 	

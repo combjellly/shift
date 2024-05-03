@@ -1,0 +1,63 @@
+{
+  "name": "@mit-app-inventor/blockly-plugin-workspace-multiselect",
+  "version": "0.1.12",
+  "description": "A Blockly plugin that allows to drag, select and doing actions on multiple blocks in the workspace.",
+  "scripts": {
+    "audit:fix": "blockly-scripts auditFix",
+    "build": "blockly-scripts build",
+    "clean": "blockly-scripts clean",
+    "lint": "eslint . --fix",
+    "predeploy": "blockly-scripts predeploy",
+    "prepublishOnly": "npm run clean && npm run build",
+    "start": "blockly-scripts start",
+    "test": "blockly-scripts test"
+  },
+  "main": "./dist/index.js",
+  "module": "./src/index.js",
+  "unpkg": "./dist/index.js",
+  "author": "Songlin Jiang",
+  "keywords": [
+    "blockly",
+    "blockly-plugin",
+    "workspace-multiselect"
+  ],
+  "homepage": "https://github.com/mit-cml/workspace-multiselect/#readme",
+  "bugs": {
+    "url": "https://github.com/mit-cml/workspace-multiselect/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mit-cml/workspace-multiselect.git"
+  },
+  "license": "Apache-2.0",
+  "directories": {
+    "dist": "dist",
+    "src": "src"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "dependencies": {
+    "dragselect": "^2.7.4"
+  },
+  "devDependencies": {
+    "@blockly/workspace-backpack": "^5.3.4",
+    "@blockly/dev-scripts": "^3.1.1",
+    "@blockly/dev-tools": "^7.1.6",
+    "blockly": "^10.4.2"
+  },
+  "peerDependencies": {
+    "blockly": ">=10.4.0 <= 11"
+  },
+  "publishConfig": {},
+  "eslintConfig": {
+    "extends": "@blockly/eslint-config"
+  },
+  "engines": {
+    "node": ">=8.17.0"
+  },
+  "browserslist": [
+    "defaults"
+  ]
+}
