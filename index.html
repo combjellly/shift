@@ -1,334 +1,161 @@
+<!DOCTYPE html>
 <html>
-<body onload="/*launchNow1(),*/launchNow()">
 
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+    <script src="./midi/midi.js"></script>
+    <script src="./static/js/presets.js"></script>
+    <script src="./static/js/repl.js"></script>
+    <script src="./WebDirt/WebDirt-packed.js"></script>
+</head>
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<body onload="launchNow(), readURL()">
+    <script type="module">
+        import { launch, launchDirt, renderStandalone, parse } from './index.js';
 
+        function unlockAudioContext(audioCtx) {
+            if (audioCtx.state !== 'suspended') return;
+            const events = ['touchstart', 'touchend', 'mousedown', 'keydown'];
+            events.forEach(e => document.body.addEventListener(e, unlock, false));
 
-<link rel="stylesheet" href="style.css">
-<script src="./midi/midi.js"></script>
-<script src="./WebDirt/WebDirt-packed.js"></script> <!-- import WebDirt JS library -->
-<!--
+            function unlock() {
+                audioCtx.resume().then(clean);
+            }
 
-<script src="static/js/p5.min.js">  </script> 
-<script src="static/js/newdollzjs.js"> </script> 
-
-
-<script defer src=https://cdn.JsDelivr.net/npm/p5@0.7.2></script>
-<script defer src=https://Unpkg.com/p5@0.7.2/lib/addons/p5.dom.min.js></script>
--->
-
-<script type="module">
-import {launch, launchDirt , main, printToConsole, renderStandalone, parse } from './index.js'
-
-function unlockAudioContext(audioCtx) {
-  if (audioCtx.state !== 'suspended') return;
-  const b = document.body;
-  const events = ['touchstart','touchend', 'mousedown','keydown'];
-  events.forEach(e => b.addEventListener(e, unlock, false));
-  function unlock() { audioCtx.resume().then(clean); }
-  function clean() { events.forEach(e => b.removeEventListener(e, unlock)); }
-}
-
-function launchNow(){
-	window._engineRecord = launch();
-	window._webDirt = launchDirt();
-	unlockAudioContext(_webDirt)
-	populateMidiOutputDropdown();
-	render();
-}
-
-function doEvaluate() {
-	var t = document.getElementById("code").value;
-	var x = parse(_engineRecord)(t)();
-	document.getElementById('status').textContent = x;
-}
-
-function stop() {
-	var x = parse(_engineRecord)("")();
-	document.getElementById('status').textContent = x;
-}
-
-function render(){
-	var disp = renderStandalone(_engineRecord)(_webDirt)();
-	//document.getElementById('dog').textContent = disp;
-	playMidiEvents(disp);
-	console.log(disp)
-	setTimeout(render,300);
-}
-
-window.launchNow = launchNow;
-window.doEvaluate = doEvaluate;
-window.render = render;
-window.stop = stop;
-
-	
-
-</script>
-
-
-
-
-<div> <canvas ><script src="static/js/newdollzjs.js"> </script>  </canvas></div>
-<div id=codeBlock>
-
-
-<textarea id="code" rows="4" cols="50" onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;} " >notes = [1 6 10 13 18]
-note = 3
-pCounter = 0 
-pnote = 0
-
-
-
-every 0.5
-	pnote = notes:pCounter
-	midi[pnote+ 50,60,300]
-	pCounter = pCounter + 1
-	if pCounter == 5 [ pCounter = 0]
-	
-
-</textarea>
-
-<script>
-
-    document.addEventListener('keydown', function(event) {
-        // Check if the Shift key is held down and the Enter key is pressed
-        if (event.shiftKey && event.key === ' ') {
-            // Call your JavaScript function here
-            event.preventDefault();
-
-	   		doEvaluate();
+            function clean() {
+                events.forEach(e => document.body.removeEventListener(e, unlock));
+            }
         }
-    });
 
-    function yourFunction() {
-        // Your function logic goes here
-        console.log("Shift + Enter pressed!");
-        // Add your code to be executed when Shift + Enter is pressed
-    }
+        function launchNow() {
+            window._engineRecord = launch();
+            window._webDirt = launchDirt();
+            unlockAudioContext(window._webDirt);
+            populateMidiOutputDropdown();
+            render();
+        }
 
-
-var script1 = `y=0
-every 1.5
-	y = 0
-	i = [0 4 8]
-
-every 0.5
-	play.piano:i:y[70,0,0]
-	y = y +1
-
-every 3 
-	i = [0 5 7]
-
-every 0.75
-	play.piano:(i:y)-1[70,0,100]
-`
-   
-var script2 = `change = 6
-time = 1/1.3
-
-every 0.75 / time
-	y = 0
-	i = [0 4 8]
-
-every 1 / time
-	vol = 0
-	change = change + 1
-
-every 0.5/ time
-	play.snare:4[vol]
-	vol = vol + 60
-
-every 0.25/ time
-	play.teringherrie:o*change[50,0,pan]
-	y = y +1
- 	o = i:y
-	pan = random. 40 70
-
-every 1.5 / time
-	i = [0 5 7]
-	
-every 0.75/ time
-	play.hardbass:(o*change)-1 [70,0,40]	
-	play.hardbass:(o*change)-2 [70,0,70]
-
-every 3/ time
-	y = 0
-	i = [0 4 8]
-
-every 1/ time
-	play.k2:2[80,(-4),50]
-
-every 2/ time
-	play.hi*change [50,0,100]
-	y = y +1
- 	o = i:y
-
-every 6 / time
-	i = [0 5 7]
-	change = 0
-
-every 0.75*2/ time
-	play.hi:(o*change)-1[50,0,0]
-
-` 
-var script3 =`i=3
-every y
-	x = random. 1 3
-	y = x / 3
-	
-	play.hi[70,x,p]
-	play.hi:1[70,x+4,o]
-
-every 0.1
-	play.pingu:x-1[60,x,p]
-
-every 0.2 
-	p = random. 0 100
-	o = random. 0 100
-	d = random. 0 100
-
-every 0.05
-	play.organ[50,0+i,p]
-	play.organ[50,7+i,o]
-	play.organ1[50,12+i,d]
-
-every 16
-	i= x
-`
-
-var script4 =`i=0
-notes = [1 6 10 13 18]
-note = 3
-pCounter = 0 
-pnote = 0
-
-
-
-every 0.5
-	pnote = notes:pCounter
-	midi[pnote+ 50,60,300]
-	pCounter = pCounter + 1
-	if pCounter == 5 [ pCounter = 0]
-	
-`
-
-var textarea = document.getElementById("code");
-var messages = [ script4, script1, script2, script3 ];
-var currMesg = 0;
-
-function advanceMessage() {
-    textarea.value = messages[ currMesg++ % messages.length ];
+        function doEvaluate() {
+            var t = document.getElementById("code").value;
+            var x = parse(_engineRecord)(t)();
+            document.getElementById('status').textContent = x;
 }
 
-advanceMessage();
-</script>
+        function stop() {
+            var x = parse(_engineRecord)("")();
+            document.getElementById('status').textContent = x;
+        }
 
-
-<script>
-var buttonState = 1 
-function toggleButton() {
-
-	if(buttonState%2 == 1){
-	    document.getElementById("button_toggle").className = "glyphicon glyphicon-stop";
-	   	document.getElementById("button_toggle").innerHTML = "";
-	   	doEvaluate()
-	    buttonState++;
-
-	} else {
-	    document.getElementById("button_toggle").className = "glyphicon glyphicon-play";
-	   	document.getElementById("button_toggle").innerHTML = "";
-	   	stop()
-
-
-	    buttonState++;
-
-}
+        function render(){
+            var disp = renderStandalone(_engineRecord)(_webDirt)();
+            //document.getElementById('dog').textContent = disp;
+            playMidiEvents(disp);
+            setTimeout(render,16);
 }
 
-const openSidebar = () => {
-    document.getElementById("mySidebar").style.width = "250px";
-    document.getElementById("main").style.marginLeft = "250px";
-};
+        window.launchNow = launchNow;
+        window.doEvaluate = doEvaluate;
+        window.render = render;
+        window.stop = stop;
+    </script>
 
-const closeSidebar = () => {
-    document.getElementById("mySidebar").style.width = "0";
-    document.getElementById("main").style.marginLeft = "0";
-};
+    <div id="codeBlock">
+        <textarea id="code" rows="4" cols="50" onkeydown="if(event.keyCode===9){event.preventDefault();document.execCommand('insertText', false, '\t');}">
+y=0
+organ = [0 (-1) (-5) 0]
+o = 0
 
-</script>
+time = 1
 
+every 1.5 * time
+    y = 0
+    i = [0 4 8]
 
-<div id="mySidebar" class="sidebar">
-    <a href="javascript:void(0)" class="closebtn" onclick="closeSidebar()">&times;</a>
-	  <side>
+every 0.5* time
+    pan = random. 0 100
+    play.guitar:i:y[70,0,0]
+    y = y +1
 
+every 3 * time
+    i = [0 5 7]
 
+every 0.75* time
+    play.guitar:(i:y)-1[70,0,100]
 
-	   	<img style="display: block; margin:auto;" src="static/img/logo.png" width="30%" height=auto>
+every 4* time
+    play.organ[70, -12,pan]
 
-	<br></br>
-		<span style="display: block; text-align: center; ">
+every 1* time
+    play.organ:12[70, organ:o]
 
-			<a href="https://shift.nickhernandez.ca/docs/intro "> About</a>
-			<a href="https://shift.nickhernandez.ca/docs/category/tutorial---basics"> Tutorials</a>
-			<a href="http://hdl.handle.net/11375/28305 "> Thesis</a> 
+{- every 1
+    play.cello[70, organ:o] -}
 
-    <label for="midiOutputDropdown">Select MIDI Output:</label>
-    <select id="midiOutputDropdown"></select>
-    <button onclick="populateMidiOutputDropdown();">Populate MIDI Output</button>
-	<button onclick="playMidiEvents()">Test MIDI Output</button>
+every 12 * (time/3)
+    o = o +1
+    if o == 3 [ 
+        o=0 ]
+        </textarea>
+    </div>
 
-	<br></br>
-	<br></br>
+    <div id="mySidebar" class="sidebar">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeSidebar()">&times;</a>
+        <side>
+            <img style="display: block; margin:auto;" src="static/img/logo.png" width="30%" height="auto">
+            <br>
+            <span style="display: block; text-align: center;">
+                <a href="https://shift.nickhernandez.ca/docs/intro"> About</a>
+                <a href="https://shift.nickhernandez.ca/docs/category/tutorial---basics"> Tutorials</a>
+                <a href="http://hdl.handle.net/11375/28305"> Thesis</a>
+                <label for="midiOutputDropdown">Select MIDI Output:</label>
+                <select id="midiOutputDropdown"></select>
+                <button onclick="populateMidiOutputDropdown();">Populate MIDI Output</button>
+                <button onclick="playMidiEvents()">Test MIDI Output</button>
+                <br>
+                <br>
+            </span>
+            <span style="display: block; text-align: center;">
+                Shift is a live coding language designed to help students and tech-newcomers alike learn the basics of computer programming through music. 
+                Research and process documentation can be found in the accompanying thesis, published in 2022. For more information on how to use Shift, 
+                please click to the About link above.
+            </span>
+        </side>
+    </div>
 
+    <div id="buttonPlace">
+        <p>
+            <button type="button" onclick="openSidebar()" class="btn btn-default btn-lg" style="color: white">
+                <span id="info" class="glyphicon glyphicon-info-sign"></span>
+            </button>
+        </p>
 
-		</span>
-		<span style="display: block; text-align: center;">
-		Shift is a live coding language designed to help students and tech-newcomers alike learn the basics of computer programming through music. Research and process documentation can be found in the accompanying thesis, published in 2022. For more information on how to use Shift, please click to the About link above.
-		</span>
+        <p>
+            <button type="button" onclick="toggleButton()" class="btn btn-default btn-lg" style="color: white">
+                <span id="button_toggle" class="glyphicon glyphicon-play"></span>
+            </button>
+        </p>
 
-	</side>
-</div>
+        <p>
+            <button type="button" onclick="doEvaluate()" class="btn btn-default btn-lg" style="color: white">
+                <span id="button_toggle" class="glyphicon glyphicon-refresh"></span>
+            </button>
+        </p>
 
+        <p>
+            <button type="button" onclick="advanceMessage()" class="btn btn-default btn-lg" style="color: white">
+                <span id="advance_text" class="glyphicon glyphicon-step-forward"></span>
+            </button>
+        </p>
 
-<div id=buttonPlace>
+        <p>
+            <button type="button" onclick="exportCode()" class="btn btn-default btn-lg" style="color: yellow">
+                <span id="export_code" class="glyphicon glyphicon-share"></span>
+            </button>
+        </p>
 
-
-	<p>
-		<button type="button" onclick="openSidebar()" class="btn btn-default btn-lg" style="color: white">
-	  		<span  id="info"  class="glyphicon glyphicon-info-sign" >  </span> 
-		</button>
-	</p>
-
-
-
-	<p>
-		<button type="button" onclick="toggleButton()" class="btn btn-default btn-lg" style="color: white">
-	  		<span id="button_toggle"  class="glyphicon glyphicon-play" > </span> 
-		</button>
-	</p>
-
-	<p>
-		<button type="button" onclick="doEvaluate()" class="btn btn-default btn-lg" style="color: white">
-	  		<span id="button_toggle"  class="glyphicon glyphicon-refresh" > </span> 
-		</button>
-	</p>
-
-	<p>
-		<button type="button" onclick="advanceMessage()" class="btn btn-default btn-lg" style="color: white">
-	  		<span  id="advance_text"  class="glyphicon glyphicon-step-forward" > </span> 
-		</button>
-	</p>
-
-	<div id="status"> </div>
-
-
-
-</div>
-
-<!--
-<textarea id="code1" name="w3review" rows="4" cols="50" onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}" >
--->
+        <div id="status"></div>
+    </div>
 </body>
+
 </html>

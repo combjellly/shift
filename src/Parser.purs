@@ -13,7 +13,6 @@ import Data.Int (toNumber)
 import Data.Array (many)
 import Data.List
 import Data.Either
-
 import AST
 
 
@@ -23,21 +22,22 @@ type P a = ParserT String Identity a
 tokenParser :: GenTokenParser String Identity
 tokenParser = makeTokenParser $ LanguageDef (unGenLanguageDef emptyDef) {
   reservedNames = ["every","play","if","elif","else","random"],
-  reservedOpNames = [",","=","+","-","*","/","[","]",":","==","!=",">","<",">=","<="]
+  reservedOpNames = [",","=","+","-","*","/","[","]",":","==","!=",">","<",">=","<=","~"],
+  commentStart = "{-",
+  commentEnd = "-}",
+  commentLine = "--",
+  nestedComments = true
   }
 
-parsetest :: String -> Either ParseError (List Element)
-parsetest x = do
-    runParser x program
 
 program :: P Program
 program = sepBy elementChoice (whiteSpace)
 
 elementChoice :: P Element
 elementChoice = choice [
-      try $ loopElement,
-      try $ globalSequence,
-      try $ variableGlobal
+      try loopElement,
+      try globalSequence,
+      variableGlobal
       ]
 
 loopElement :: P Element
@@ -90,7 +90,7 @@ action = choice [
     try $ playActionNote, 
     try $ playActionGain,
     try $ playAction,
-    try $ midiPlayAction
+    midiPlayAction
 
 ]
 
@@ -108,7 +108,7 @@ conditionalAction = choice [
     try $ playActionNote, 
     try $ playActionGain,
     try $ playAction,
-    try $ midiPlayAction
+    midiPlayAction
 
 ]
 
@@ -139,7 +139,7 @@ playAction = do
 sampleNumber :: P NumExpression
 sampleNumber = choice [
           try $ withNumber,
-          try $ withoutNumber
+          withoutNumber
           ]
 
 withNumber :: P NumExpression
@@ -263,7 +263,7 @@ conditional = do
     try $ greaterThan, -- >
     try $ lessThan, -- <
     try $ greaterThanOrEqualTo, -- >=
-    try $ lesserThanOrEqualTo -- <= 
+    lesserThanOrEqualTo -- <= 
     ]
 
 equalTo :: P Action
@@ -340,8 +340,15 @@ variableTask = do
   _ <- pure unit
   choice [
     try $ sequenceRead,
-    try $ variableTaskArithmetic
+    variableTaskArithmetic
     ]
+
+negateVariableTask :: P NumExpression
+negateVariableTask = do
+  _ <-pure unit
+  reservedOp "-"
+  i <- variableTask
+  pure $ Negate i
 
 sequenceRead :: P NumExpression
 sequenceRead = do
@@ -349,6 +356,7 @@ sequenceRead = do
   reservedOp ":"
   i <- variableTask
   pure $ SequenceRead xs i
+
 
 variableTaskArithmetic :: P NumExpression
 variableTaskArithmetic = do
@@ -360,7 +368,6 @@ additionSubtraction = choice [
   reservedOp "+" $> Addition,
   reservedOp "-" $> Subtraction
   ]
-
 
 variableTask' :: P NumExpression
 variableTask' = do 
@@ -379,15 +386,28 @@ variableTask'' = do
   _ <- pure unit
   choice [
     parens variableTask,
-    try $ Constant <$> negativeFloat,
-    try $ Constant <$> detNum,
-    try $ VariableRead <$> identifier
+    try negateVariableTask,
+    try intOrNumber,
+    VariableRead <$> identifier
     ]
 
-negativeFloat :: P Number
+intOrNumber :: P NumExpression
+intOrNumber = do
+  x <- naturalOrFloat
+  case x of
+    Left i -> pure $ Constant (toNumber i)
+    Right f -> pure $ Constant f
+
+{-
+negativeFloat :: P NumExpression
 negativeFloat = do
   reservedOp "-"
-  ((*) (-1.0)) <$> detNum
+  x <- variableTask
+  pure $ Negate x
+
+detNum :: P Number 
+detNum = naturalOrFloatToNumber <$> tokenParser.naturalOrFloat
+-}
 
 naturalOrFloatToNumber :: Either Int Number -> Number
 naturalOrFloatToNumber (Left i) = toNumber i

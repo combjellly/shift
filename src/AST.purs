@@ -37,6 +37,7 @@ data NumExpression =
         Subtraction NumExpression NumExpression|
         Division NumExpression NumExpression|
         Multiplication NumExpression NumExpression|
+        Negate NumExpression |
         SequenceRead String NumExpression|
         VariableRead String | -- variable name being referenced 
         Constant Number 
@@ -60,7 +61,6 @@ instance showAction :: Show Action where
     show (Sequence v xs) = show v <> "[ " <> show xs <> "]"
     show (Conditional v comp xs ca) = "if" <> show v <> show comp <> show xs <> "do " <> show ca
 
-
 instance showVariableA :: Show VariableA where
     show (VariableA x xs) = show x <> "=" <> show xs
 
@@ -69,6 +69,7 @@ instance showNumExpression :: Show NumExpression where
     show (Subtraction x xs) = "[" <>show x <> "-" <> show xs <> "]"
     show (Division x xs) = "[" <>show x <> "/" <> show xs <> "]"
     show (Multiplication x xs) = "[" <> show x <> "*" <> show xs <> "]"
+    show (Negate x) =  "-" <> show x
     show (SequenceRead xs i) = "[" <> show xs <> ":" <> show i <> "]"
     show (VariableRead x) = show x
     show (Constant x) = show x

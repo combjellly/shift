@@ -61,12 +61,13 @@ let selectedOutput = null; // Variable to store the selected MIDI output
       // Convert unquoted keys and values to a valid JSON format
       parsedMessage = JSON.parse(fixedMessage.replace(/([\w-]+):/g, '"$1":'));
 
-    } catch (error) {
+    } catch (error  ) {
       console.error("Error parsing MIDI message:", error);
       return;
     }
 
-    //console.log(parsedMessage);
+    // weird bug where negative numbers dont work, no matter what! convert them all into positive numbers :)?
+    console.log(parsedMessage);
 
     const { channel, duration, note, velocity, whenPosix, s } = parsedMessage;
 
@@ -77,11 +78,11 @@ let selectedOutput = null; // Variable to store the selected MIDI output
     // Schedule the MIDI note on event after the specified delay
     setTimeout(() => {
       // Send the MIDI note-on message
-      selectedOutput.send([0x90 + channel, note, velocity]);
+      selectedOutput.send([0x90 + Math.abs(channel), Math.abs(note), Math.abs(velocity)]);
 
       // Schedule the MIDI note-off event after the specified duration
       setTimeout(() => {
-        selectedOutput.send([0x80 + channel, note, 0x00]); // MIDI note-off message
+        selectedOutput.send([0x80 + Math.abs(channel), Math.abs(note), 0x00]); // MIDI note-off message
       }, duration);
     }, delay);
     

@@ -32,6 +32,8 @@ import WebDirt
 import Data.Traversable
 import Data.Map as Map
 import Data.Int (toNumber,ceil,fromString,round)
+import Debug
+
 
 type EngineRecord = 
   {
@@ -74,11 +76,11 @@ launchDirt = do
 
 -- 
 parse :: EngineRecord -> String -> Effect String
-parse er x = case (runParser x program) of
-    Left err -> pure $ show err 
+parse er x = case runParser x program of
+    Left err -> pure $ "Parse error: " <> show err
     Right p -> do 
         write p er.programRef
-        pure $ show "success"
+        pure "success"
 
 renderStandalone :: EngineRecord -> WebDirt -> Effect String
 renderStandalone er wd = do 
@@ -95,11 +97,9 @@ renderStandalone er wd = do
     let cycleEnd = timeToCount t wE
     p <- liftEffect $ read $ er.programRef
     variables <- liftEffect $ read $ er.variables
-
     se <- whatDoINeedToDoThisRenderFrame er p t cycleStart cycleEnd -- read and write variable refs + renderEvents 
     play wd se
     pure $ show se
-
   else
     pure $ show "sleepy time"
 
@@ -181,7 +181,7 @@ compareOriginalVariable er s n = do
       let newMap = Map.insert s n varMap
       write newMap er.variables
       write defMap er.originalVariables
-      log $ (show defMap)
+      --log $ (show defMap)
 
 -- if def number is same as original def, do not overwrite. if it is different. overwrite
 
@@ -194,9 +194,9 @@ dealWithLoops er p t wStart wEnd = do
 
         let ls = collectLoops p -- ::  (List Loop)
         let looptimes = concat $ map (getLoopTimes er wStart wEnd varMap seqMap) ls -- :: List (Tuple Loop Number)
-
         let sortedList = sortBy (comparing snd) looptimes -- :: List (Tuple Number Loop)
         events <- traverse (performLoop er) sortedList
+        --log $ show looptimes
         pure $ concat events
       -- calculate effect of all activations 
 
@@ -232,6 +232,7 @@ limitLoopTime n = do
 cycleIntervalList :: Number -> Number -> Number -> List Number
 cycleIntervalList wStart wEnd n = 
   let pFirst = (toNumber $ ceil (wStart/n)) * n
+  --let pFirst =  (wStart/n) * n
   in if pFirst < wEnd then
     (pFirst : cycleIntervalList (pFirst+n) wEnd n )
   else
@@ -334,63 +335,6 @@ performVariableA er (VariableA s e) = do
  pure Nil
 
 
-{- MIDI STUFF :)
-
-dealWithMidiLoops :: EngineRecord -> Program -> Tempo -> Number -> Number -> Effect (List MidiEvent)
-dealWithMidiLoops er p t wStart wEnd = do
-    -- for each loop statement, figure out when they each activate. 
-        -- collect all loops. Program -> (List Loop)
-        varMap <- liftEffect $ read er.variables 
-        seqMap <- liftEffect $ read er.sequences 
-
-        let ls = collectLoops p -- ::  (List Loop)
-        let looptimes = concat $ map (getLoopTimes er wStart wEnd varMap seqMap) ls -- :: List (Tuple Loop Number)
-
-        let sortedList = sortBy (comparing snd) looptimes -- :: List (Tuple Number Loop)
-        events <- traverse (performMidiLoop er) sortedList
-        pure $ concat events
-      -- calculate effect of all activations 
-
-performMidiLoop :: EngineRecord -> Tuple Loop Number -> Effect (List MidiEvent)
-performMidiLoop er (Tuple (Loop _ la) n) = performMidiListAction er la n
-
-performMidiListAction :: EngineRecord -> List Action -> Number -> Effect (List MidiEvent)
-performMidiListAction er la nowCycles = do 
-  xs <- traverse (performMidiAction er nowCycles) la 
-  pure $ concat xs 
-
-performMidiAction :: EngineRecord -> Number -> Action -> Effect (List MidiEvent)
-performMidiAction er nowCycles (MidiPlay x params) = do
-  t <- read $ er.tempo
-  midiEvent <- performMidi er t nowCycles x params
-  pure midiEvent
-
-  performMidiAction er nowCycles _ = do
-  pure Nil
-  
-performMidiAction er nowCycles (Conditional v comp xs ca) = do 
-  varMap <- liftEffect $ read $ er.variables
-  seqMap <- liftEffect $ read $ er.sequences  
-  let rV =  resolveExpression v varMap seqMap -- first variable
-  let rXS = resolveExpression xs varMap seqMap -- variable being compared to 
-
-  let condBool = case comp of
-
-                    "==" -> rV == rXS 
-                    "!=" -> rV /= rXS 
-                    ">" ->  rV >  rXS 
-                    "<" ->  rV <  rXS 
-                    ">=" -> rV >= rXS 
-                    "<=" -> rV <= rXS 
-                    _ -> false
-
-  if condBool == true then do
-    performMidiListAction er ca nowCycles
-    -- condition funcitons would go here. prolly case of..... < > == != <= >= ....
-  else do 
-    pure Nil
--}
-
 crunchVar :: Map.Map String Number -> Map.Map String (List Number) -> VariableA -> Map.Map String Number 
 crunchVar m mxs (VariableA s e) = Map.insert s (resolveExpression e m mxs) m -- v will be the outcome of e
 
@@ -439,12 +383,12 @@ performMidi er t nowCycles channel params = do
   let me = midiEventHandler t midiChannel nowCycles n v d
   pure $ pure me
 
-
 resolveExpression :: NumExpression -> Map.Map String Number -> Map.Map String (List Number) -> Number 
 resolveExpression (Addition x xs) m mxs  = resolveExpression x m mxs + resolveExpression xs m mxs
 resolveExpression (Subtraction x xs) m mxs  = resolveExpression x m mxs - resolveExpression xs m mxs
 resolveExpression (Division x xs) m mxs = resolveExpression x m mxs / resolveExpression xs m mxs
 resolveExpression (Multiplication x xs) m  mxs = resolveExpression x m mxs * resolveExpression xs m mxs
+resolveExpression (Negate x) m mxs =  -1.0 * (resolveExpression x m mxs)
 resolveExpression (SequenceRead xs i) m mxs = readSequenceNumber (resolveExpression i m mxs) xs mxs -- xs is List, i is index
 resolveExpression (VariableRead x ) m mxs= varRead x m 
 resolveExpression (Constant x ) m mxs = x

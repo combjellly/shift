@@ -4,9 +4,7 @@
 body {
   background-color: #E9E0A0;
   background-color: black;
-
   font-family: 'Open Sans', sans-serif;
-
 }
 
 textarea {
@@ -17,21 +15,19 @@ textarea {
   background: black;
   color: white;
   font-size: 20px;
-
 }
 
 textarea::-webkit-scrollbar {
-	    display: none;
-	}
+  display: none;
+}
 
 textarea:focus {
-  outline:none;
-
+  outline: none;
 }
 
 side {
-  display:block;
-  margin-left: 3%;  
+  display: block;
+  margin-left: 3%;
   margin-right: 5%;
   margin-top: 15%;
   font-family: 'Helvetica';
@@ -39,100 +35,91 @@ side {
   font-size: 1.1em;
 }
 
-
-
 a {
-
   font-family: 'Helvetica';
   color: #490707;
   font-size: 1.5em;
-
 }
 
-#codeBlock{
-    position: absolute;
-    top: 0%;
-    left: 0%;
-    width: 100%;
-    height:  100%;
+#codeBlock {
+  position: absolute;
+  top: 0%;
+  left: 0%;
+  width: 100%;
+  height: 100%;
 }
 
-h1{
-  color: white;
-}
-h2{
+h1 {
   color: white;
 }
 
-#buttonPlace{
-	    position: absolute;
-	     top: 2%;
-	     right: 2%;;
+h2 {
+  color: white;
 }
 
-.btn-lg{
+#buttonPlace {
+  position: absolute;
+  top: 2%;
+  right: 2%;
+}
+
+.btn-lg {
   font-size: 3em;
 }
 
-
 canvas {
-       position:absolute;
-       top:0;
-       left:0;
-       width:100%;
-       height:100%;
-       z-index:-1;
-    }
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
 
 .sidebar {
-    height: 100%;
-    width: 0;
-    position: fixed;
-    z-index: 1;
-    top: 0;
-    right: 0;
-    background-color: gray;
-    overflow-x: hidden;
-    padding-top: 60px;
-    transition: 0.5s;
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  background-color: gray;
+  overflow-x: hidden;
+  padding-top: 60px;
+  transition: 0.5s;
 }
 
 .sidebar a {
-    margin-left: 5%;  
-    margin-right: 5%;
-    text-decoration: underline;
-    font-size: 1.2rem;
-    color: #fff;
-    transition: 0.3s;
+  margin-left: 5%;
+  margin-right: 5%;
+  text-decoration: underline;
+  font-size: 1.2rem;
+  color: #fff;
+  transition: 0.3s;
 }
 
 .sidebar a:hover {
-    color: red;
+  color: red;
 }
 
 .sidebar .closebtn {
-    position: absolute;
-    top: 0;
-    right: 25px;
-    font-size: 36px;
-    margin-left: 50px;
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
 }
 
 .openbtn:hover {
-    background-color: #2b9348;
-}
-
-#main {
-    transition: margin-left 0.5s;
-    padding: 20px;
+  background-color: #2b9348;
 }
 
 @media screen and (max-height: 450px) {
-    .sidebar {
-        padding-top: 15px;
-    }
+  .sidebar {
+    padding-top: 15px;
+  }
 
-    .sidebar a {
-        font-size: 18px;
-    }
+  .sidebar a {
+    font-size: 18px;
+  }
 }
