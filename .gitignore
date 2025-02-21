@@ -9,3 +9,5 @@
 /.psa*
 /.spago
 /block/
+shift
+makeSampleMap.sh
