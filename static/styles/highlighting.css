@@ -53,10 +53,22 @@ main {
   line-height: 1.313;
 }
 
-.hljs-keyword {
-  color: #ff0000; /* red */
+.hljs-number {
+  color: #c792e9; /* red */
 }
 
 .hljs-string {
-  color: #008000; /* green */
+  color: #d7cd6e;
+}
+
+.hljs-control {
+  color: #f92672;
+}
+
+.hljs-keyword {
+  color: #a4e02f;
+}
+
+.hlfs-symbol {
+  color: #88ddff;
 }

@@ -33,8 +33,9 @@ const highlight = () => {
             return {
                 // Define keywords, literals, etc.
                 keywords: {
-                    keyword: 'if else while for function every',
-                    literal: 'true false'
+                    // keyword: 'if else while for function every',
+                    literal: 'true false',
+                    control: 'if else for every while'
                 },
                 contains: [
                     hljs.COMMENT('//', '$'),
@@ -42,6 +43,14 @@ const highlight = () => {
                     {
                         className: 'string',
                         begin: /"/, end: /"/
+                    },
+                    {
+                        className: 'number',
+                        begin: /\b\d+(\.\d+)?\b/
+                    },
+                    {
+                        className: 'symbol',
+                        begin: /\*|\/|\.|:|==|!=|<=|>=|<|>|=/
                     }
                 ]
             };
@@ -53,6 +62,7 @@ const highlight = () => {
         highlightEl.innerHTML = highlighted;
     });
 };
+
 
 const init = () => {
     inputEl.addEventListener("input", () => {
