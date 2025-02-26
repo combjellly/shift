@@ -1,67 +1,84 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
+  <head>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="style.css" />
     <script src="./midi/midi.js"></script>
     <script src="./static/js/presets.js"></script>
     <script src="./static/js/repl.js"></script>
     <script src="./WebDirt/WebDirt-packed.js"></script>
-</head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/styles/default.min.css"
+    />
+    <link rel="stylesheet" href="./static/styles/highlighting.css" />
+  </head>
 
-<body onload="launchNow(), readURL()">
+  <body onload="launchNow(), readURL()">
     <script type="module">
-        import { launch, launchDirt, renderStandalone, parse } from './index.js';
+      import { launch, launchDirt, renderStandalone, parse } from "./index.js";
 
-        function unlockAudioContext(audioCtx) {
-            if (audioCtx.state !== 'suspended') return;
-            const events = ['touchstart', 'touchend', 'mousedown', 'keydown'];
-            events.forEach(e => document.body.addEventListener(e, unlock, false));
+      function unlockAudioContext(audioCtx) {
+        if (audioCtx.state !== "suspended") return;
+        const events = ["touchstart", "touchend", "mousedown", "keydown"];
+        events.forEach((e) => document.body.addEventListener(e, unlock, false));
 
-            function unlock() {
-                audioCtx.resume().then(clean);
-            }
-
-            function clean() {
-                events.forEach(e => document.body.removeEventListener(e, unlock));
-            }
+        function unlock() {
+          audioCtx.resume().then(clean);
         }
 
-        function launchNow() {
-            window._engineRecord = launch();
-            window._webDirt = launchDirt();
-            unlockAudioContext(window._webDirt);
-            populateMidiOutputDropdown();
-            render();
+        function clean() {
+          events.forEach((e) => document.body.removeEventListener(e, unlock));
         }
+      }
 
-        function doEvaluate() {
-            var t = document.getElementById("code").value;
-            var x = parse(_engineRecord)(t)();
-            document.getElementById('status').textContent = x;
-}
+      function launchNow() {
+        window._engineRecord = launch();
+        window._webDirt = launchDirt();
+        unlockAudioContext(window._webDirt);
+        populateMidiOutputDropdown();
+        render();
+      }
 
-        function stop() {
-            var x = parse(_engineRecord)("")();
-            document.getElementById('status').textContent = x;
-        }
+      function doEvaluate() {
+        var t = document.getElementById("code").value;
+        var x = parse(_engineRecord)(t)();
+        document.getElementById("status").textContent = x;
+      }
 
-        function render(){
-            var disp = renderStandalone(_engineRecord)(_webDirt)();
-            //document.getElementById('dog').textContent = disp;
-            playMidiEvents(disp);
-            setTimeout(render,16);
-}
+      function stop() {
+        var x = parse(_engineRecord)("")();
+        document.getElementById("status").textContent = x;
+      }
 
-        window.launchNow = launchNow;
-        window.doEvaluate = doEvaluate;
-        window.render = render;
-        window.stop = stop;
+      function render() {
+        var disp = renderStandalone(_engineRecord)(_webDirt)();
+        //document.getElementById('dog').textContent = disp;
+        playMidiEvents(disp);
+        setTimeout(render, 16);
+      }
+
+      window.launchNow = launchNow;
+      window.doEvaluate = doEvaluate;
+      window.render = render;
+      window.stop = stop;
     </script>
 
-    <div id="codeBlock">
-        <textarea id="code" rows="4" cols="50" onkeydown="if(event.keyCode===9){event.preventDefault();document.execCommand('insertText', false, '\t');}">
+    <div id="codeBlock" class="plain">
+      <textarea
+        id="code"
+        rows="4"
+        cols="50"
+        class="plain__editor"
+        data-el="input"
+        onkeydown="if(event.keyCode===9){event.preventDefault();document.execCommand('insertText', false, '\t');}"
+      >
 y=0
 organ = [0 (-1) (-5) 0]
 o = 0
@@ -96,66 +113,115 @@ every 12 * (time/3)
     o = o +1
     if o == 3 [ 
         o=0 ]
-        </textarea>
+        </textarea
+      >
+      <pre
+        aria-hidden="true"
+        class="plain__highlights"
+      ><code data-el="highlight" class="shift"></code></pre>
     </div>
 
     <div id="mySidebar" class="sidebar">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeSidebar()">&times;</a>
-        <side>
-            <img style="display: block; margin:auto;" src="static/img/logo.png" width="30%" height="auto">
-            <br>
-            <span style="display: block; text-align: center;">
-                <a href="https://shift.nickhernandez.ca/docs/intro"> About</a>
-                <a href="https://shift.nickhernandez.ca/docs/category/tutorial---basics"> Tutorials</a>
-                <a href="http://hdl.handle.net/11375/28305"> Thesis</a>
-                <label for="midiOutputDropdown">Select MIDI Output:</label>
-                <select id="midiOutputDropdown"></select>
-                <button onclick="populateMidiOutputDropdown();">Populate MIDI Output</button>
-                <button onclick="playMidiEvents()">Test MIDI Output</button>
-                <br>
-                <br>
-            </span>
-            <span style="display: block; text-align: center;">
-                Shift is a live coding language designed to help students and tech-newcomers alike learn the basics of computer programming through music. 
-                Research and process documentation can be found in the accompanying thesis, published in 2022. For more information on how to use Shift, 
-                please click to the About link above.
-            </span>
-        </side>
+      <a href="javascript:void(0)" class="closebtn" onclick="closeSidebar()"
+        >&times;</a
+      >
+      <side>
+        <img
+          style="display: block; margin: auto"
+          src="static/img/logo.png"
+          width="30%"
+          height="auto"
+        />
+        <br />
+        <span style="display: block; text-align: center">
+          <a href="https://shift.nickhernandez.ca/docs/intro"> About</a>
+          <a
+            href="https://shift.nickhernandez.ca/docs/category/tutorial---basics"
+          >
+            Tutorials</a
+          >
+          <a href="http://hdl.handle.net/11375/28305"> Thesis</a>
+          <label for="midiOutputDropdown">Select MIDI Output:</label>
+          <select id="midiOutputDropdown"></select>
+          <button onclick="populateMidiOutputDropdown();">
+            Populate MIDI Output
+          </button>
+          <button onclick="playMidiEvents()">Test MIDI Output</button>
+          <br />
+          <br />
+        </span>
+        <span style="display: block; text-align: center">
+          Shift is a live coding language designed to help students and
+          tech-newcomers alike learn the basics of computer programming through
+          music. Research and process documentation can be found in the
+          accompanying thesis, published in 2022. For more information on how to
+          use Shift, please click to the About link above.
+        </span>
+      </side>
     </div>
 
     <div id="buttonPlace">
-        <p>
-            <button type="button" onclick="openSidebar()" class="btn btn-default btn-lg" style="color: white">
-                <span id="info" class="glyphicon glyphicon-info-sign"></span>
-            </button>
-        </p>
+      <p>
+        <button
+          type="button"
+          onclick="openSidebar()"
+          class="btn btn-default btn-lg"
+          style="color: white"
+        >
+          <span id="info" class="glyphicon glyphicon-info-sign"></span>
+        </button>
+      </p>
 
-        <p>
-            <button type="button" onclick="toggleButton()" class="btn btn-default btn-lg" style="color: white">
-                <span id="button_toggle" class="glyphicon glyphicon-play"></span>
-            </button>
-        </p>
+      <p>
+        <button
+          type="button"
+          onclick="toggleButton()"
+          class="btn btn-default btn-lg"
+          style="color: white"
+        >
+          <span id="button_toggle" class="glyphicon glyphicon-play"></span>
+        </button>
+      </p>
 
-        <p>
-            <button type="button" onclick="doEvaluate()" class="btn btn-default btn-lg" style="color: white">
-                <span id="button_toggle" class="glyphicon glyphicon-refresh"></span>
-            </button>
-        </p>
+      <p>
+        <button
+          type="button"
+          onclick="doEvaluate()"
+          class="btn btn-default btn-lg"
+          style="color: white"
+        >
+          <span id="button_toggle" class="glyphicon glyphicon-refresh"></span>
+        </button>
+      </p>
 
-        <p>
-            <button type="button" onclick="advanceMessage()" class="btn btn-default btn-lg" style="color: white">
-                <span id="advance_text" class="glyphicon glyphicon-step-forward"></span>
-            </button>
-        </p>
+      <p>
+        <button
+          type="button"
+          onclick="advanceMessage()"
+          class="btn btn-default btn-lg"
+          style="color: white"
+        >
+          <span
+            id="advance_text"
+            class="glyphicon glyphicon-step-forward"
+          ></span>
+        </button>
+      </p>
 
-        <p>
-            <button type="button" onclick="exportCode()" class="btn btn-default btn-lg" style="color: yellow">
-                <span id="export_code" class="glyphicon glyphicon-share"></span>
-            </button>
-        </p>
+      <p>
+        <button
+          type="button"
+          onclick="exportCode()"
+          class="btn btn-default btn-lg"
+          style="color: yellow"
+        >
+          <span id="export_code" class="glyphicon glyphicon-share"></span>
+        </button>
+      </p>
 
-        <div id="status"></div>
+      <div id="status"></div>
     </div>
-</body>
+  </body>
 
+  <script src="./static/js/highlighting.js"></script>
 </html>
