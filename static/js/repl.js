@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .replace(/=+$/, '')
             .replace(/\+/g, '-')
             .replace(/\//g, '_');
-        let urlString = window.location.href + "#" + hashedCode;
+        let urlString = (window.location.href.slice(0,-1) + "#" + hashedCode);
         navigator.clipboard.writeText(urlString);
         console.log(urlString);
     }
