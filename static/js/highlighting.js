@@ -31,15 +31,13 @@ const highlight = () => {
     window.requestAnimationFrame(() => {
         hljs.registerLanguage('shift', function (hljs) {
             return {
-                // Define keywords, literals, etc.
                 keywords: {
-                    // keyword: 'if else while for function every',
                     literal: 'true false',
                     control: 'if else for every while'
                 },
                 contains: [
-                    hljs.COMMENT('//', '$'),
-                    hljs.COMMENT('/\\*', '\\*/'),
+                    hljs.COMMENT('--', '$'),
+                    hljs.COMMENT('{-', '-}'),
                     {
                         className: 'string',
                         begin: /"/, end: /"/
