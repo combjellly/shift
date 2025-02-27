@@ -1,0 +1,71 @@
+.plain,
+.text {
+  flex: 1 0 20rem;
+  position: relative;
+}
+
+[data-el="input"] {
+  border-width: 1px;
+  color: rgb(255, 255, 255);
+  caret-color: rgb(255, 255, 255);
+  white-space: break-spaces;
+  word-break: break-word;
+  resize: vertical;
+  background-color: #191919;
+}
+
+[data-el="input"][data-initialized="true"] {
+  color: transparent;
+  resize: none;
+  overflow: hidden;
+}
+
+[data-el="highlight"] {
+  font-family: inherit;
+  line-height: inherit;
+  font-size: inherit;
+  margin: 0;
+  padding: 0;
+  white-space: break-spaces;
+  word-break: break-word;
+}
+
+.plain__highlights {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 90%;
+  border: 1px solid rgb(74, 74, 74);
+  pointer-events: none;
+  color: white;
+}
+
+.plain__editor,
+.plain__highlights {
+  width: 90%;
+  font-size: 2.1rem;
+  font-family: monospace;
+  margin: 0;
+  padding: 0.7rem 1.4ch;
+  line-height: 1.313;
+}
+
+.hljs-number {
+  color: #c792e9;
+}
+
+.hljs-string {
+  color: #d7cd6e;
+}
+
+.hljs-control {
+  color: #f92672;
+}
+
+.hljs-keyword {
+  color: #a4e02f;
+}
+
+.hlfs-symbol {
+  color: #88ddff;
+}
