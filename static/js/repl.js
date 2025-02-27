@@ -5,16 +5,18 @@ document.addEventListener("DOMContentLoaded", function () {
     var buttonState = 1;
 
 
-    function openSidebar(){
+    function openSidebar() {
         document.getElementById("mySidebar").style.width = "250px";
     };
 
-    function closeSidebar(){
+    function closeSidebar() {
         document.getElementById("mySidebar").style.width = "0";
     };
 
     function advanceMessage() {
         textarea.value = messages[currMesg++ % messages.length];
+        resizeTextarea(inputEl);
+        highlight();
     }
 
     function exportCode() {
@@ -53,7 +55,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    document.addEventListener('keydown', function(event) {
+    document.addEventListener('keydown', function (event) {
         if (event.shiftKey && event.key === ' ') {
             event.preventDefault();
             doEvaluate();
