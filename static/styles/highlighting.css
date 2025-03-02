@@ -2,6 +2,12 @@
 .text {
   flex: 1 0 20rem;
   position: relative;
+  outline: none;
+}
+
+
+.plain__highlights {
+  pointer-events: none;
 }
 
 [data-el="input"] {
@@ -12,13 +18,18 @@
   word-break: break-word;
   resize: vertical;
   background-color: #191919;
+  outline: none;
+  pointer-events: auto;
 }
 
 [data-el="input"][data-initialized="true"] {
   color: transparent;
   resize: none;
   overflow: hidden;
+  outline: none;
 }
+
+
 
 [data-el="highlight"] {
   font-family: inherit;
@@ -35,9 +46,13 @@
   top: 0;
   left: 0;
   width: 90%;
-  border: 1px solid rgb(74, 74, 74);
+  border: 0px solid rgb(74, 74, 74);
   pointer-events: none;
   color: white;
+}
+
+.plain__highlights:focus {
+  outline: none;
 }
 
 .plain__editor,

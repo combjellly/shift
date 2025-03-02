@@ -40,12 +40,12 @@ let selectedOutput = null; // Variable to store the selected MIDI output
 
     // Remove surrounding parentheses and split into individual messages
     const messages = midiEventsString.slice(1, -1).split(' : ');
-    console.log
+    //console.log
     // Play MIDI events for each parsed message
     messages.forEach((message) => {
       if (message !== 'Nil' && message !== 'sleepy time' && message !== 'i') { // where is the i coming from?
         playMidiEvent(message);
-        console.log(message)
+        //console.log(message)
       }
     });
   }
@@ -67,7 +67,7 @@ let selectedOutput = null; // Variable to store the selected MIDI output
     }
 
     // weird bug where negative numbers dont work, no matter what! convert them all into positive numbers :)?
-    console.log(parsedMessage);
+    //console.log(parsedMessage);
 
     const { channel, duration, note, velocity, whenPosix, s } = parsedMessage;
 

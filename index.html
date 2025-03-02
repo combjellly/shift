@@ -7,7 +7,7 @@
       crossorigin="anonymous"
     />
     <link rel="stylesheet" href="style.css" />
-    <script src="./midi/midi.js"></script>
+    <script src="./static/js/midi.js"></script>
     <script src="./static/js/presets.js"></script>
     <script src="./static/js/repl.js"></script>
     <script src="./WebDirt/WebDirt-packed.js"></script>
@@ -21,19 +21,28 @@
   </head>
 
   <body onload="launchNow(), readURL()">
+
+
     <script type="module">
       import { launch, launchDirt, renderStandalone, parse } from "./index.js";
 
       function unlockAudioContext(audioCtx) {
-        if (audioCtx.state !== "suspended") return;
+        if (audioCtx.state !== "suspended") return; // Only resume if suspended
+
+        // Set up the user interaction events
         const events = ["touchstart", "touchend", "mousedown", "keydown"];
         events.forEach((e) => document.body.addEventListener(e, unlock, false));
 
         function unlock() {
-          audioCtx.resume().then(clean);
+          // Resume the audio context on user interaction
+          audioCtx.resume().then(() => {
+            console.log("Audio context resumed!");
+            clean();
+          });
         }
 
         function clean() {
+          // Remove the event listeners after resuming the audio context
           events.forEach((e) => document.body.removeEventListener(e, unlock));
         }
       }

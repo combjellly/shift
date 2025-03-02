@@ -17,8 +17,6 @@ const resizeTextarea = (textArea) => {
     if (!textArea) {
         return;
     }
-
-
     window.requestAnimationFrame(() => {
         textArea.style.height = 0;
         if (textArea.scrollHeight > 0) {
@@ -74,4 +72,5 @@ document.addEventListener("DOMContentLoaded", () => {
     init();
     resizeTextarea(inputEl);
     highlight();
+
 })
