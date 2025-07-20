@@ -18,22 +18,25 @@ document.addEventListener("DOMContentLoaded", function () {
         resizeTextarea(inputEl);
         highlight();
     }
-    
-    function exportCode() {
-        let hashedCode = btoa(textarea.value)
-            .replace(/=+$/, '')
-            .replace(/\+/g, '-')
-            .replace(/\//g, '_');
 
-        // Get the base URL without any hash or query string
-        let baseUrl = window.location.origin + window.location.pathname;
+function exportCode() { // fixed for github??
+    let hashedCode = btoa(textarea.value)
+        .replace(/=+$/, '')
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_');
 
-        // Construct the new URL with the hash only from your code
-        let urlString = baseUrl.replace(/\/$/, "") + "#" + hashedCode;
+    let url = new URL(window.location.href);
+    url.hash = ""; // Remove current hash
 
-        navigator.clipboard.writeText(urlString);
-        console.log(urlString);
+    if (!url.pathname.endsWith("/")) {
+        url.pathname += "/";
     }
+
+    let urlString = url.toString() + "#" + hashedCode;
+
+    navigator.clipboard.writeText(urlString);
+    console.log(urlString);
+}
 
     window.toggleButton = function () {
         var buttonToggle = document.getElementById("button_toggle");
