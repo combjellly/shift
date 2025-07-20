@@ -18,13 +18,19 @@ document.addEventListener("DOMContentLoaded", function () {
         resizeTextarea(inputEl);
         highlight();
     }
-
+    
     function exportCode() {
         let hashedCode = btoa(textarea.value)
             .replace(/=+$/, '')
             .replace(/\+/g, '-')
             .replace(/\//g, '_');
-        let urlString = (window.location.href.replace(/\/$/, "") + "#" + hashedCode);
+
+        // Get the base URL without any hash or query string
+        let baseUrl = window.location.origin + window.location.pathname;
+
+        // Construct the new URL with the hash only from your code
+        let urlString = baseUrl.replace(/\/$/, "") + "#" + hashedCode;
+
         navigator.clipboard.writeText(urlString);
         console.log(urlString);
     }
