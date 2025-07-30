@@ -20,61 +20,74 @@
     <link rel="stylesheet" href="./static/styles/highlighting.css" />
   </head>
 
-  <body onload="launchNow(), readURL()">
+  <body onload="readURL()">
     <script type="module">
-      import { launch, launchDirt, renderStandalone, parse } from "./index.js";
+    import { launch, launchDirt, renderStandalone, parse } from "./index.js";
 
-      function unlockAudioContext(audioCtx) {
-        if (audioCtx.state !== "suspended") return; // Only resume if suspended
+    function unlockAudioContext(audioCtx) {
+      if (audioCtx.state !== "suspended") return;
 
-        // Set up the user interaction events
-        const events = ["touchstart", "touchend", "mousedown", "keydown"];
-        events.forEach((e) => document.body.addEventListener(e, unlock, false));
+      const events = ["touchstart", "touchend", "mousedown", "keydown"];
+      events.forEach((e) => document.body.addEventListener(e, unlock, false));
 
-        function unlock() {
-          // Resume the audio context on user interaction
-          audioCtx.resume().then(() => {
-            console.log("Audio context resumed!");
-            clean();
-          });
-        }
-
-        function clean() {
-          // Remove the event listeners after resuming the audio context
-          events.forEach((e) => document.body.removeEventListener(e, unlock));
-        }
+      function unlock() {
+        audioCtx.resume().then(() => {
+          console.log("Audio context resumed!");
+          clean();
+        });
       }
 
-      function launchNow() {
-        window._engineRecord = launch();
-        window._webDirt = launchDirt();
-        unlockAudioContext(window._webDirt);
+      function clean() {
+        events.forEach((e) => document.body.removeEventListener(e, unlock));
+      }
+    }
+
+    function launchNow() {
+      if (window._hasLaunched) {
+        return;
+      }
+
+      window._engineRecord = launch();
+      window._webDirt = launchDirt();
+      window._hasLaunched = true;
+
+      if (typeof navigator.requestMIDIAccess === "function") {
         populateMidiOutputDropdown();
-        render();
+      } else {
+        console.warn("Web MIDI API not supported.");
       }
 
-      function doEvaluate() {
-        var t = document.getElementById("code").value;
-        var x = parse(_engineRecord)(t)();
-        document.getElementById("status").textContent = x;
-      }
+      render();
+    }
 
-      function stop() {
-        var x = parse(_engineRecord)("")();
-        document.getElementById("status").textContent = x;
-      }
+    function doEvaluate() {
+      launchNow();
+      const t = document.getElementById("code").value;
+      const x = parse(_engineRecord)(t)();
+      document.getElementById("status").textContent = x;
+    }
 
-      function render() {
-        var disp = renderStandalone(_engineRecord)(_webDirt)();
-        //document.getElementById('dog').textContent = disp;
+    function stop() {
+      const x = parse(_engineRecord)("")();
+      document.getElementById("status").textContent = x;
+    }
+
+    function render() {
+      const disp = renderStandalone(_engineRecord)(_webDirt)();
+
+      if (typeof navigator.requestMIDIAccess === "function") {
         playMidiEvents(disp);
-        setTimeout(render, 16);
       }
 
-      window.launchNow = launchNow;
-      window.doEvaluate = doEvaluate;
-      window.render = render;
-      window.stop = stop;
+      setTimeout(render, 16);
+    }
+
+
+    window.launchNow = launchNow;
+    window.doEvaluate = doEvaluate;
+    window.render = render;
+    window.stop = stop;
+
     </script>
 
     <div id="codeBlock" class="plain">
