@@ -62,9 +62,12 @@
 
     function doEvaluate() {
       launchNow();
-      const t = document.getElementById("code").value;
+      const t = document.getElementById("code").value.toLowerCase();
+      document.getElementById("code").value = t;
       const x = parse(_engineRecord)(t)();
       document.getElementById("status").textContent = x;
+      highlight();
+
     }
 
     function stop() {
