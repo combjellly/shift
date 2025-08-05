@@ -64,7 +64,7 @@
   padding: 0.7rem 1.4ch;
   line-height: 1.313;
 }
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 1000px) {
   .plain__editor,
 .plain__highlights {
   width: 90%;
