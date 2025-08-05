@@ -19,7 +19,7 @@ textarea {
 
 textarea::-webkit-scrollbar {
   display: none;
-    outline: none;
+  outline: none;
 
 }
 
