@@ -27420,24 +27420,35 @@ var program = /* @__PURE__ */ sepBy(elementChoice)(whiteSpace);
 var unwrap3 = /* @__PURE__ */ unwrap();
 var diff2 = /* @__PURE__ */ diff(durationSeconds);
 var adjust2 = /* @__PURE__ */ adjust(durationSeconds);
-var timeToCount = function(launchDateTime) {
+var zeroFractional = function(dt) {
+  var secondsSince = unwrap3(diff2(dt)(dt));
+  var fractional = secondsSince - floor(secondsSince);
+  return fromMaybe(dt)(adjust2(-fractional)(dt));
+};
+var roundUpToNextSecond = function(dt) {
+  var secondsSinceWhole = unwrap3(diff2(dt)(zeroFractional(dt)));
+  var fractional = secondsSinceWhole - floor(secondsSinceWhole);
+  var adjustment = function() {
+    var $8 = fractional === 0;
+    if ($8) {
+      return 0;
+    }
+    ;
+    return 1 - fractional;
+  }();
+  return fromMaybe(dt)(adjust2(adjustment)(dt));
+};
+var timeToCount = function(rawLaunchTime) {
   return function(x) {
-    return unwrap3(diff2(x)(launchDateTime)) * 2;
+    var launchTime = roundUpToNextSecond(rawLaunchTime);
+    return unwrap3(diff2(x)(launchTime)) * 2;
   };
 };
-var countToTime = function(launchDateTime) {
+var countToTime = function(rawLaunchTime) {
   return function(c) {
     var nSeconds = c / 2;
-    var newTime = adjust2(nSeconds)(launchDateTime);
-    if (newTime instanceof Nothing) {
-      return launchDateTime;
-    }
-    ;
-    if (newTime instanceof Just) {
-      return newTime.value0;
-    }
-    ;
-    throw new Error("Failed pattern match at Tempo (line 20, column 6 - line 22, column 16): " + [newTime.constructor.name]);
+    var launchTime = roundUpToNextSecond(rawLaunchTime);
+    return fromMaybe(launchTime)(adjust2(nSeconds)(launchTime));
   };
 };
 

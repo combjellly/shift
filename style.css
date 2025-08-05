@@ -67,7 +67,7 @@ h2 {
 }
 
 .btn-lg {
-  font-size: 3em;
+  font-size: 5em;
 }
 
 canvas {
@@ -117,7 +117,7 @@ canvas {
   background-color: #2b9348;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 600px) {
   body {
     font-size: 1.2em;
   }
@@ -132,7 +132,7 @@ canvas {
   }
 
   side {
-    font-size: 1.4em;
+    font-size: 100px;
   }
 
   a {

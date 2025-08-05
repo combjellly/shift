@@ -30,8 +30,8 @@ const highlight = () => {
         hljs.registerLanguage('shift', function (hljs) {
             return {
                 keywords: {
-                    literal: 'true false',
-                    control: 'if else for every while'
+                    literal: 'play',
+                    control: 'if else for every while '
                 },
                 contains: [
                     hljs.COMMENT('--', '$'),
