@@ -1,4 +1,5 @@
 let selectedOutput = null; // Variable to store the selected MIDI output
+let midisync = 375
 
   // Function to populate the MIDI output dropdown menu
   function populateMidiOutputDropdown() {
@@ -50,8 +51,15 @@ let selectedOutput = null; // Variable to store the selected MIDI output
     });
   }
 
+    function updateSync() {
+      midisync = parseInt(document.getElementById('syncInput').value);
+      console.log(midisync)
+      }
+  
+
   // Function to play a single MIDI event based on the provided message
   function playMidiEvent(message) {
+    console.log(midisync)
     // Ensure that 'Nil' is replaced with null
     const fixedMessage = message.replace(/Nil/g, 'null').replace(/[() ]/g, '');
     // Parse the string into a JavaScript object
@@ -72,8 +80,8 @@ let selectedOutput = null; // Variable to store the selected MIDI output
     const { channel, duration, note, velocity, whenPosix, s } = parsedMessage;
 
 
-    // Calculate the delay in milliseconds until the specified POSIX time
-    const delay = (whenPosix * 1000 - Date.now())+375 ;
+    // Calculate the delay in milliseconds until the specified POSIX time. 
+    const delay = (whenPosix * 1000 - Date.now()) + midisync ;
 
     // Schedule the MIDI note on event after the specified delay
     setTimeout(() => {

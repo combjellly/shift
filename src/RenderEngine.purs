@@ -35,6 +35,29 @@ type SampleEvent =
   ,note:: Number
   ,pan:: Number
   ,cut:: Int
+  {-
+  ,overgain :: Number -- additional gain added to gain to go past clamp at 2
+  ,nudge :: Number -- nudge the time of the sample forwards/backwards in seconds
+  ,speed :: Number
+  ,begin :: Number
+  ,end :: Number
+  ,shape :: Number
+  ,cutoff :: Number
+  ,resonance :: Number
+  ,hcutoff :: Number
+  ,hresonance :: Number
+  ,bandf :: Number
+  ,bandq :: Number
+  ,vowel :: String
+  ,delay :: Number
+  ,delaytime :: Number
+  ,delayfeedback :: Number
+  ,loop :: Number
+  ,crush :: Number
+  ,coarse :: Number
+  ,unit :: String
+  -}
+  -- midi
   ,velocity :: Number
   ,channel :: Number
   ,duration :: Number

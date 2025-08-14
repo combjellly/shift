@@ -54,6 +54,7 @@ function exportCode() { // fixed for github??
         }
     };
 
+
     function readURL() {
         if (window.location.hash) {
             let hashedCode = window.location.hash.substring(1);
@@ -79,3 +80,12 @@ function exportCode() { // fixed for github??
 
     readURL();
 });
+
+    function changeBG() {
+      const colorPicker = document.getElementById('head');
+      const inputEl = document.querySelector('[data-el="input"]');
+      inputEl.style.backgroundColor = colorPicker.value;
+      document.body.style.backgroundColor = colorPicker.value;
+
+    }
+

@@ -42,13 +42,13 @@
       }
     }
 
-    function launchNow() {
+    function launchNow(sampleMap) {
       if (window._hasLaunched) {
         return;
       }
 
       window._engineRecord = launch();
-      window._webDirt = launchDirt();
+      window._webDirt = launchDirt(sampleMap);
       window._hasLaunched = true;
 
       if (typeof navigator.requestMIDIAccess === "function") {
@@ -61,7 +61,7 @@
     }
 
     function doEvaluate() {
-      launchNow();
+      launchNow("test");
       const t = document.getElementById("code").value.toLowerCase();
       document.getElementById("code").value = t;
       const x = parse(_engineRecord)(t)();
@@ -157,13 +157,18 @@ every 12 * (time/3)
         />
         <br />
         <span style="display: block; text-align: center">
-          <a href="https://shift.nickhernandez.ca/docs/intro"> About</a>
+          <a href="https://shift.nickhernandez.ca/tutorial/intro"> About</a>
           <a
-            href="https://shift.nickhernandez.ca/docs/category/tutorial---basics"
+            href="https://shift.nickhernandez.ca/tutorial/category/tutorial---basics"
           >
             Tutorials</a
           >
           <a href="http://hdl.handle.net/11375/28305"> Thesis</a>
+
+              <input type="number" id="syncInput" placeholder="midi delay time">
+              <button onclick="updateSync()">sync!</button>
+              <p id="output"></p>
+
           <label for="midiOutputDropdown">Select MIDI Output:</label>
           <select id="midiOutputDropdown"></select>
           <button onclick="populateMidiOutputDropdown();">
@@ -171,6 +176,7 @@ every 12 * (time/3)
           </button>
           <button onclick="playMidiEvents()">Test MIDI Output</button>
           <br />
+          <input type="color" id="head" name="head" value="#e66465"  oninput="changeBG()"/>
           <br />
         </span>
         <span style="display: block; text-align: center">

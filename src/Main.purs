@@ -3,10 +3,7 @@ import Parser
 import AST
 import Tempo
 import RenderEngine
-
-
 import Prelude
-
 import Data.Either
 import Data.Maybe
 import Parsing
@@ -419,6 +416,7 @@ varRead x m= do
   varOut
 
 
+
 --- NEED TO CHANGE THIS TO ADD FUNCTIONS
 play :: WebDirt -> List SampleEvent -> Effect Unit
 play wd es = for_ es \i -> do
@@ -437,10 +435,11 @@ play wd es = for_ es \i -> do
       playSample wd {s: i.s, n: i.n, whenPosix: i.whenPosix, gain: gainFixed, note:i.note, pan:panFixed , cut:i.cut}
       pure unit
 
+--adjusted gain to go to 200!
 gainFix :: Number -> Number
 gainFix g = do
-  if g >= 1.0 then do
-    1.0
+  if g >= 2.0 then do
+    2.0
     else do 
     if g <= 0.0 then do
       0.0

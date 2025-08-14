@@ -17,7 +17,7 @@
   white-space: break-spaces;
   word-break: break-word;
   resize: vertical;
-  background-color: #191919;
+  background-color: #0000ff;
   outline: none;
   pointer-events: auto;
 }
@@ -64,6 +64,7 @@
   padding: 0.7rem 1.4ch;
   line-height: 1.313;
 }
+
 @media screen and (max-width: 1000px) {
   .plain__editor,
 .plain__highlights {
@@ -95,3 +96,80 @@
 .hlfs-symbol {
   color: #88ddff;
 }
+
+.editor-container {
+    position: relative;
+    width: 100%;
+    height: 300px; /* adjust as needed */
+}
+
+.editor-container pre,
+.editor-container textarea {
+    font-family: monospace;
+    font-size: 100px;
+    line-height: 1.4;
+    padding: 8px;
+    border: none;
+    outline: none;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    tab-size: 4;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+
+.editor-container pre {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none; /* clicks go through to textarea */
+}
+
+.editor-container textarea {
+    position: relative;
+    background: transparent;
+    color: transparent; /* hide raw text */
+    caret-color: black; /* show caret */
+    resize: none;
+}
+
+.every-block {
+  position: relative;
+  background-color: rgba(255, 255, 0, 0.0);
+  pointer-events: none; /* disable pointer events on whole block text */
+  white-space: pre-wrap;
+  cursor: default; /* no pointer cursor on text */
+}
+
+
+.every-block .click-zone {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 20%;
+  height: 100%;
+  pointer-events: auto;
+  cursor: pointer;
+  background: transparent;
+  z-index: 10;
+}
+
+
+.every-block.commented {
+  pointer-events: none;
+  display: block;           /* behave like a block */
+  white-space: pre-wrap;    /* preserve newlines */
+}
+
+
+/* add to your stylesheet */
+[data-el="highlight"] {
+  /* allow typing through the highlight layer except for explicit clickable blocks */
+  pointer-events: none;
+}
+
+
+
+
