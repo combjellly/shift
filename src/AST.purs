@@ -37,6 +37,7 @@ data NumExpression =
         Subtraction NumExpression NumExpression|
         Division NumExpression NumExpression|
         Multiplication NumExpression NumExpression|
+        Modulo NumExpression NumExpression|
         Negate NumExpression |
         SequenceRead String NumExpression|
         VariableRead String | -- variable name being referenced 
@@ -69,6 +70,7 @@ instance showNumExpression :: Show NumExpression where
     show (Subtraction x xs) = "[" <>show x <> "-" <> show xs <> "]"
     show (Division x xs) = "[" <>show x <> "/" <> show xs <> "]"
     show (Multiplication x xs) = "[" <> show x <> "*" <> show xs <> "]"
+    show (Modulo x xs) = "[" <> show x <> "%" <> show xs <> "]"
     show (Negate x) =  "-" <> show x
     show (SequenceRead xs i) = "[" <> show xs <> ":" <> show i <> "]"
     show (VariableRead x) = show x

@@ -29,6 +29,7 @@ import WebDirt
 import Data.Traversable
 import Data.Map as Map
 import Data.Int (toNumber,ceil,fromString,round)
+import Data.Number(remainder)
 import Debug
 
 
@@ -221,8 +222,8 @@ getLoopTimes er wStart wEnd varMap seqMap (Loop n la)  =
 
 limitLoopTime :: Number -> Number
 limitLoopTime n = do
-  if n <= 0.001 then do 
-    0.001
+  if n <= 0.0035 then do 
+    0.0035
   else
     n
 
@@ -342,7 +343,7 @@ performPlay er t nowCycles sample i params = do
 
   let channel = 0.0 -- MIDI channel 
   let v = 0.0 -- MIDI velocity 
-  let d = 0.0
+  let d = 0.0 -- MIDI duration?
 
   let sampleNum = resolveExpression i varMap sequenceMap -- sample #
   let n = resolveExpression params.note varMap sequenceMap -- note
@@ -385,6 +386,7 @@ resolveExpression (Addition x xs) m mxs  = resolveExpression x m mxs + resolveEx
 resolveExpression (Subtraction x xs) m mxs  = resolveExpression x m mxs - resolveExpression xs m mxs
 resolveExpression (Division x xs) m mxs = resolveExpression x m mxs / resolveExpression xs m mxs
 resolveExpression (Multiplication x xs) m  mxs = resolveExpression x m mxs * resolveExpression xs m mxs
+resolveExpression (Modulo x xs) m  mxs = remainder (resolveExpression x m mxs) (resolveExpression xs m mxs)
 resolveExpression (Negate x) m mxs =  -1.0 * (resolveExpression x m mxs)
 resolveExpression (SequenceRead xs i) m mxs = readSequenceNumber (resolveExpression i m mxs) xs mxs -- xs is List, i is index
 resolveExpression (VariableRead x ) m mxs= varRead x m 

@@ -22,7 +22,7 @@ type P a = ParserT String Identity a
 tokenParser :: GenTokenParser String Identity
 tokenParser = makeTokenParser $ LanguageDef (unGenLanguageDef emptyDef) {
   reservedNames = ["every","play","if","elif","else","random"],
-  reservedOpNames = [",","=","+","-","*","/","[","]",":","==","!=",">","<",">=","<=","~"],
+  reservedOpNames = [",","=","+","-","*","/","%","[","]",":","==","!=",">","<",">=","<=","~"],
   commentStart = "{-",
   commentEnd = "-}",
   commentLine = "--",
@@ -372,13 +372,15 @@ additionSubtraction = choice [
 variableTask' :: P NumExpression
 variableTask' = do 
   _ <- pure unit
-  chainl1 variableTask'' divisionMultiplication
+  chainl1 variableTask'' divisionMultiplicationModulo
 
 
-divisionMultiplication :: P (NumExpression -> NumExpression -> NumExpression)
-divisionMultiplication = choice [
+divisionMultiplicationModulo :: P (NumExpression -> NumExpression -> NumExpression)
+divisionMultiplicationModulo = choice [
   reservedOp "/" $> Division, 
-  reservedOp "*" $> Multiplication
+  reservedOp "*" $> Multiplication,
+  reservedOp "%" $> Modulo
+
   ]
 
 variableTask'' :: P NumExpression
