@@ -29,9 +29,11 @@ tokenParser = makeTokenParser $ LanguageDef (unGenLanguageDef emptyDef) {
   nestedComments = true
   }
 
-
 program :: P Program
-program = sepBy elementChoice (whiteSpace)
+program = do
+  whiteSpace               -- consume any leading whitespace/comments
+  es <- sepBy elementChoice whiteSpace
+  pure es
 
 elementChoice :: P Element
 elementChoice = choice [
@@ -72,6 +74,7 @@ variableGlobal = do
   pure $ VariableGlobal x xs
 
 -----------------------------
+
 
 listOfActions :: P (List Action)
 listOfActions = sepBy action (whiteSpace)
@@ -124,8 +127,6 @@ midiPlayAction = do
   d <- variableTask
   reservedOp "]"
   pure $ MidiPlay i {note : n, velocity : v, duration:d}
-
-
 
 playAction :: P Action
 playAction = do

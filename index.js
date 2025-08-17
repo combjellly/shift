@@ -27071,7 +27071,7 @@ var intOrNumber = /* @__PURE__ */ bind6(naturalOrFloat)(function(x) {
     return pure4(new Constant(x.value0));
   }
   ;
-  throw new Error("Failed pattern match at Parser (line 399, column 3 - line 401, column 33): " + [x.constructor.name]);
+  throw new Error("Failed pattern match at Parser (line 400, column 3 - line 402, column 33): " + [x.constructor.name]);
 });
 var identifier = /* @__PURE__ */ function() {
   return tokenParser.identifier;
@@ -27085,7 +27085,7 @@ var additionSubtraction = /* @__PURE__ */ function() {
 var $lazy_negateVariableTask = /* @__PURE__ */ $runtime_lazy7("negateVariableTask", "Parser", function() {
   return bind6(pure4(unit))(function() {
     return discard2(reservedOp("-"))(function() {
-      return bind6($lazy_variableTask(350))(function(i) {
+      return bind6($lazy_variableTask(351))(function(i) {
         return pure4(new Negate(i));
       });
     });
@@ -27094,7 +27094,7 @@ var $lazy_negateVariableTask = /* @__PURE__ */ $runtime_lazy7("negateVariableTas
 var $lazy_sequenceRead = /* @__PURE__ */ $runtime_lazy7("sequenceRead", "Parser", function() {
   return bind6(identifier)(function(xs) {
     return discard2(reservedOp(":"))(function() {
-      return bind6($lazy_variableTask(357))(function(i) {
+      return bind6($lazy_variableTask(358))(function(i) {
         return pure4(new SequenceRead(xs, i));
       });
     });
@@ -27102,25 +27102,25 @@ var $lazy_sequenceRead = /* @__PURE__ */ $runtime_lazy7("sequenceRead", "Parser"
 });
 var $lazy_variableTask = /* @__PURE__ */ $runtime_lazy7("variableTask", "Parser", function() {
   return bind6(pure4(unit))(function() {
-    return choice3([$$try($lazy_sequenceRead(342)), $lazy_variableTaskArithmetic(343)]);
+    return choice3([$$try($lazy_sequenceRead(343)), $lazy_variableTaskArithmetic(344)]);
   });
 });
 var $lazy_variableTask$prime = /* @__PURE__ */ $runtime_lazy7("variableTask'", "Parser", function() {
   return bind6(pure4(unit))(function() {
-    return chainl1($lazy_variableTask$prime$prime(375))(divisionMultiplicationModulo);
+    return chainl1($lazy_variableTask$prime$prime(376))(divisionMultiplicationModulo);
   });
 });
 var $lazy_variableTask$prime$prime = /* @__PURE__ */ $runtime_lazy7("variableTask''", "Parser", function() {
   return bind6(pure4(unit))(function() {
-    return choice3([parens($lazy_variableTask(390)), $$try($lazy_negateVariableTask(391)), $$try(intOrNumber), map11(VariableRead.create)(identifier)]);
+    return choice3([parens($lazy_variableTask(391)), $$try($lazy_negateVariableTask(392)), $$try(intOrNumber), map11(VariableRead.create)(identifier)]);
   });
 });
 var $lazy_variableTaskArithmetic = /* @__PURE__ */ $runtime_lazy7("variableTaskArithmetic", "Parser", function() {
   return bind6(pure4(unit))(function() {
-    return chainl1($lazy_variableTask$prime(364))(additionSubtraction);
+    return chainl1($lazy_variableTask$prime(365))(additionSubtraction);
   });
 });
-var variableTask = /* @__PURE__ */ $lazy_variableTask(338);
+var variableTask = /* @__PURE__ */ $lazy_variableTask(339);
 var genRandNum = /* @__PURE__ */ bind6(identifier)(function(v) {
   return discard2(reservedOp("="))(function() {
     return discard2(reserved("random"))(function() {
@@ -27432,7 +27432,11 @@ var loopElement = /* @__PURE__ */ bind6(loop)(function(l) {
   return pure4(new LoopElement(l));
 });
 var elementChoice = /* @__PURE__ */ choice3([/* @__PURE__ */ $$try(loopElement), /* @__PURE__ */ $$try(globalSequence), variableGlobal]);
-var program = /* @__PURE__ */ sepBy(elementChoice)(whiteSpace);
+var program = /* @__PURE__ */ discard2(whiteSpace)(function() {
+  return bind6(sepBy(elementChoice)(whiteSpace))(function(es) {
+    return pure4(es);
+  });
+});
 
 // output/Tempo/index.js
 var unwrap3 = /* @__PURE__ */ unwrap();
