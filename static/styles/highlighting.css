@@ -97,6 +97,12 @@
   color: #88ddff;
 }
 
+.hljs-number   { color: var(--hl-number, #54b1f7); }
+.hljs-string   { color: var(--hl-string, #d7cd6e); }
+.hljs-control  { color: var(--hl-control, #f92672); }
+.hljs-keyword  { color: var(--hl-keyword, #a4e02f); }  
+.hlfs-symbol   { color: var(--hl-symbol, #88ddff); }
+
 .editor-container {
     position: relative;
     width: 100%;
