@@ -19,24 +19,24 @@ document.addEventListener("DOMContentLoaded", function () {
         highlight();
     }
 
-function exportCode() { // fixed for github??
-    let hashedCode = btoa(textarea.value)
-        .replace(/=+$/, '')
-        .replace(/\+/g, '-')
-        .replace(/\//g, '_');
+    function exportCode() { // fixed for github??
+        let hashedCode = btoa(textarea.value)
+            .replace(/=+$/, '')
+            .replace(/\+/g, '-')
+            .replace(/\//g, '_');
 
-    let url = new URL(window.location.href);
-    url.hash = ""; // Remove current hash
+        let url = new URL(window.location.href);
+        url.hash = ""; // Remove current hash
 
-    if (!url.pathname.endsWith("/")) {
-        url.pathname += "/";
-    }
+        if (!url.pathname.endsWith("/")) {
+            url.pathname += "/";
+        }
 
-    let urlString = url.toString() + "#" + hashedCode;
+        let urlString = url.toString() + "#" + hashedCode;
 
-    navigator.clipboard.writeText(urlString);
-    console.log(urlString);
-}
+        navigator.clipboard.writeText(urlString);
+        console.log(urlString);
+    };
 
     window.toggleButton = function () {
         var buttonToggle = document.getElementById("button_toggle");
@@ -63,6 +63,24 @@ function exportCode() { // fixed for github??
         } else {
             console.log("No Hash");
         }
+    };
+
+
+    function loadLocalStorage(){
+        bgColor = localStorage.getItem("theme");
+        const colorPicker = document.getElementById('head');
+        const inputEl = document.querySelector('[data-el="input"]');
+        inputEl.style.backgroundColor = bgColor;
+        document.body.style.backgroundColor = bgColor;
+
+        if (localProgram = localStorage.getItem("program")){;
+
+        textarea.value = localProgram}
+        else{     
+            textarea.value = messages[0];
+
+        }
+
     }
 
     document.addEventListener('keydown', function (event) {
@@ -79,6 +97,7 @@ function exportCode() { // fixed for github??
     window.closeSidebar = closeSidebar; // Same for closeSidebar
 
     readURL();
+    loadLocalStorage();
 });
 
     function changeBG() {
@@ -86,6 +105,6 @@ function exportCode() { // fixed for github??
       const inputEl = document.querySelector('[data-el="input"]');
       inputEl.style.backgroundColor = colorPicker.value;
       document.body.style.backgroundColor = colorPicker.value;
-
+      localStorage.setItem("theme",colorPicker.value)
     }
-
+    

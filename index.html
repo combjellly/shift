@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="./static/styles/highlighting.css" />
   </head>
 
-  <body onload="readURL()">
+  <body onload="" >
     <script type="module">
     import { launch, launchDirt, renderStandalone, parse } from "./index.js";
 
@@ -66,6 +66,7 @@
       document.getElementById("code").value = t;
       const x = parse(_engineRecord)(t)();
       document.getElementById("status").textContent = x;
+      localStorage.setItem("program", t)
       highlight();
 
     }
@@ -101,42 +102,7 @@
         class="plain__editor"
         data-el="input"
         onkeydown="if(event.keyCode===9){event.preventDefault();document.execCommand('insertText', false, '\t');}"
-      >
-y=0
-organ = [0 (-1) (-5) 0]
-o = 0
-
-time = 1
-
-every 1.5 * time
-    y = 0
-    i = [0 4 8]
-
-every 0.5* time
-    pan = random. 0 100
-    play.guitar:i:y[70,0,0]
-    y = y +1
-
-every 3 * time
-    i = [0 5 7]
-
-every 0.75* time
-    play.guitar:(i:y)-1[70,0,100]
-
-every 4* time
-    play.organ[70, -12,pan]
-
-every 1* time
-    play.organ:12[70, organ:o]
-
-{- every 1
-    play.cello[70, organ:o] -}
-
-every 12 * (time/3)
-    o = o +1
-    if o == 3 [ 
-        o=0 ]
-        </textarea
+      ></textarea
       >
       <pre
         aria-hidden="true"
