@@ -158,10 +158,10 @@
   height: 100%;
   pointer-events: auto;
   cursor: pointer;
-  background: transparent;
+  background: orange;
+  opacity: 0.02;
   z-index: 10;
 }
-
 
 .every-block.commented {
   pointer-events: none;
