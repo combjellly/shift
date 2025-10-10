@@ -1,5 +1,5 @@
-var presets = {
-	script0: `every 1
+var randpresets = {
+    script0: `every 1
     note = [ 0 2 4 7 9 11]
     play.junoceleste[gate * 40, note:c]
 

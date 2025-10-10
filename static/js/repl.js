@@ -1,6 +1,8 @@
 document.addEventListener("DOMContentLoaded", function () {
     var textarea = document.getElementById("code");
     var messages = Object.values(presets);
+    var randmessages = Object.values(randpresets);
+
     var currMesg = 0;
     var buttonState = 1;
 
@@ -83,6 +85,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     }
 
+    function randPres(){
+        seed = Math.floor(Math.random() * 3)
+        textarea.value = randmessages[seed];
+        resizeTextarea(inputEl);
+        highlight();
+
+    }
+
     document.addEventListener('keydown', function (event) {
         if (event.shiftKey && event.key === ' ') {
             event.preventDefault();
@@ -96,8 +106,9 @@ document.addEventListener("DOMContentLoaded", function () {
     window.openSidebar = openSidebar;  // Make sure openSidebar is globally accessible
     window.closeSidebar = closeSidebar; // Same for closeSidebar
 
-    readURL();
-    loadLocalStorage();
+    //readURL();
+    //loadLocalStorage();
+    randPres();
 });
 
 function hexToHsl(hex) {
