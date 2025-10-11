@@ -1,7 +1,11 @@
 var randpresets = {
-    script0: `every 1
+    script0: `-- twinkle
+
+volume = 40
+
+every 1
     note = [ 0 2 4 7 9 11]
-    play.junoceleste[gate * 40, note:c]
+    play.junoceleste[gate * volume, note:c]
 
     c = c + 1
     if c == 6 
@@ -13,9 +17,13 @@ var randpresets = {
     
     ]
 `,
-    script1: `every 0.25
+    script1: `-- fastttt flute
+
+volume = 40
+
+every 0.25
     note = [ 0 2 4 7 9 11]
-    play.junoflute[gate * 40, randomnote:c]
+    play.junoflute[gate * volume, note:c]
 
     c = c + 1
 
@@ -27,13 +35,20 @@ var randpresets = {
 `,
     script3: `birdsong = 0
 
+volume = 40
+pitch = 0 
+
 every 20
     birdsong = random. [0 1 4 5 8 9]
-    play.bird:birdsong
+    play.bird:birdsong[volume, pitch]
 `,
-    script4: `every 0.25
+    script4: `-- fastttt guitar
+
+volume = 40
+
+every 0.25
     note = [ 0 2 4 7 9 11]
-    play.junoguitar[gate * 40, note:c]
+    play.junoguitar[gate * volume, note:c]
 
     c = c + 1
 
@@ -43,27 +58,36 @@ every 20
     c = 0 
         ]
 `,
-    script5: `every 0.25
-    randomnote = [ 0 2 4 7 9 11]
-    play.junoceleste[trigger * 40, randomnote:c]
+    script5: `-- fasttt twinkle
+
+volume = 40
+
+
+every 0.25
+    note = [ 0 2 4 7 9 11]
+    play.junoceleste[gate * volume, note:c]
 
     c = c + 1
 
 
     if c == 6 [ 
-    trigger = random. [ 0 0 0 0 1 0 ]
+    gate = random. [ 0 0 0 0 1 0 ]
     c = 0 
         ]
 `,
-    script6: `every 2
-    randomnote = random . [ 0 2 4 7 9 11]
-    play.junoceleste[trigger * 40, randomnote]
+    script6: `-- rando twinkle
+
+volume = 40
+
+every 2
+    note = random . [ 0 2 4 7 9 11]
+    play.junoceleste[gate * volume, note]
 
     c = c + 1
 
 
     if c == 6 [ 
-    trigger = random. [ 0 0 0 0 1 0 ]
+    gate = random. [ 0 0 0 0 1 0 ]
     c = 0 
         ]
 `
